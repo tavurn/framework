@@ -1,5 +1,8 @@
 <?php
 
+/** @noinspection PhpUndefinedFunctionInspection */
+/** @noinspection PhpUndefinedMethodInspection */
+
 namespace Tavurn\Async;
 
 use OpenSwoole\Core\Coroutine\WaitGroup;
