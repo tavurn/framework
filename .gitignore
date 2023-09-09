@@ -1,0 +1,5 @@
+# COMPOSER
+vendor/
+
+# IDE
+.idea/

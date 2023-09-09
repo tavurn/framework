@@ -1,0 +1,27 @@
+{
+    "name": "tavurn/framework",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Tavurn\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "dulkoss",
+            "email": "75451291+dulkoss@users.noreply.github.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^8.1",
+        "openswoole/core": "^22.1.4"
+    },
+    "require-dev": {
+        "openswoole/ide-helper": "^22.0.1"
+    }
+}
