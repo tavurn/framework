@@ -5,7 +5,6 @@ require __DIR__.'/../../vendor/autoload.php';
 use Tavurn\Async\Coroutine;
 
 Coroutine::run(function () {
-    // Only takes 3 seconds!!
     [$greeting, $farewell] = Coroutine::wait([
         function () {
             Coroutine::usleep(500);
@@ -16,6 +15,9 @@ Coroutine::run(function () {
             return "goodbye";
         }
     ]);
+
+    // Only takes 3, not 3.5, seconds.
+    // Thanks to coroutines!!
 
     echo $greeting, $farewell, PHP_EOL;
 });
