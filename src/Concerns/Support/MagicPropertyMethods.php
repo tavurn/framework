@@ -5,6 +5,9 @@ namespace Tavurn\Concerns\Support;
 
 use InvalidArgumentException;
 
+/**
+ * @property array<int, string> $allowedCalls
+ */
 trait MagicPropertyMethods
 {
     public function __get(string $name)
@@ -13,9 +16,7 @@ trait MagicPropertyMethods
             $this->allowedCalls = [];
         }
 
-        $allowed = array_is_list($this->allowedCalls)
-            ? array_values($this->allowedCalls)
-            : array_keys($this->allowedCalls);
+        $allowed = array_values($this->allowedCalls);
 
         if (! in_array($name, $allowed)) {
             throw new InvalidArgumentException("property [$name] does not exist on ".static::class);
