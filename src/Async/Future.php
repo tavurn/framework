@@ -4,7 +4,7 @@ namespace Tavurn\Async;
 
 use Closure;
 use RuntimeException;
-use Tavurn\Concers\Support\MagicPropertyMethods;
+use Tavurn\Concerns\Support\MagicPropertyMethods;
 
 /**
  * A future is essentially a lazy coroutine that returns a value when awaited.
