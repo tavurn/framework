@@ -15,7 +15,6 @@ interface GreeterInterface
     public function hello(): void;
 }
 
-
 $application->bind(GreeterInterface::class, function () {
     return new class implements GreeterInterface {
         public function hello(): void
