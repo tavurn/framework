@@ -20,7 +20,8 @@
     "require": {
         "php": "^8.1",
         "openswoole/core": "^22.1.4",
-        "psr/event-dispatcher": "1.0.0"
+        "psr/event-dispatcher": "1.0.0",
+        "psr/container": "2.0.2"
     },
     "require-dev": {
         "openswoole/ide-helper": "^22.0.1"
