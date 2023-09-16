@@ -3,7 +3,6 @@
 namespace Tavurn\Events;
 
 use Psr\EventDispatcher\ListenerProviderInterface;
-use Psr\EventDispatcher\StoppableEventInterface;
 use Tavurn\Contracts\Events\Dispatcher as DispatcherContract;
 use Tavurn\Contracts\Events\Stoppable;
 

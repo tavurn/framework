@@ -12,6 +12,7 @@ interface Container extends ContainerInterface
 
     /**
      * @template T
+     *
      * @param class-string<T> $abstract
      * @return T
      */
@@ -19,6 +20,7 @@ interface Container extends ContainerInterface
 
     /**
      * @template T
+     *
      * @param callable(): T $block
      * @return T
      */
@@ -26,6 +28,7 @@ interface Container extends ContainerInterface
 
     /**
      * @template T
+     *
      * @param class-string<T> $id
      * @return T
      */

@@ -8,11 +8,11 @@ Coroutine::run(function () {
     Coroutine::go(function () {
         Coroutine::sleep(1);
 
-        echo "Hello 2";
+        echo 'Hello 2';
     });
 
     // This gets echoed first.
     Coroutine::go(function () {
-        echo "Hello 1";
+        echo 'Hello 1';
     });
 });

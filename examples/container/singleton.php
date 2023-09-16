@@ -1,10 +1,13 @@
 <?php
 
-require __DIR__.'/../../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 use Tavurn\Container\Container;
 
-class A {}
+class A
+{
+    //
+}
 
 $container = new Container;
 

@@ -32,7 +32,8 @@ class Listener
     }
 }
 
-$provider = new class implements ListenerProviderInterface {
+$provider = new class implements ListenerProviderInterface
+{
     protected array $listeners = [
         Event::class => [
             Listener::class,
@@ -49,7 +50,7 @@ $provider = new class implements ListenerProviderInterface {
         $listeners = $this->listeners[$event::class] ?? [];
 
         return array_map(
-            fn($listener) => $this->callableArrayFromClass($listener),
+            fn ($listener) => $this->callableArrayFromClass($listener),
             $listeners,
         );
     }

@@ -6,7 +6,7 @@ abstract class Facade
 {
     protected static mixed $instance;
 
-    protected abstract static function getContainerAccessor(): string;
+    abstract protected static function getContainerAccessor(): string;
 
     public static function __callStatic(string $name, array $arguments)
     {

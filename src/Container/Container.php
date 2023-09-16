@@ -77,9 +77,11 @@ class Container implements ContainerContract
 
     /**
      * @template T
+     *
      * @param string[]|callable(mixed ...): T $block
      * @param mixed ...$parameters
      * @return T|mixed
+     *
      * @throws EntryNotFoundException
      * @throws ReflectionException
      * @throws ContainerException
@@ -115,8 +117,7 @@ class Container implements ContainerContract
 
     /**
      * @param Closure|ReflectionFunctionAbstract $closure
-     * @param array $merge
-     * @return iterable
+     *
      * @throws EntryNotFoundException
      * @throws ReflectionException
      * @throws ContainerException

@@ -1,6 +1,7 @@
 <?php
 
 /** @noinspection PhpUndefinedFunctionInspection */
+
 /** @noinspection PhpUndefinedMethodInspection */
 
 namespace Tavurn\Async;
@@ -11,9 +12,6 @@ final class Coroutine
 {
     /**
      * Start a new coroutine context.
-     *
-     * @param callable $block
-     * @return int
      */
     public static function run(callable $block): int
     {
@@ -65,8 +63,6 @@ final class Coroutine
 
     /**
      * @param array<int, mixed> $items
-     * @param callable $block
-     * @return void
      */
     public static function each(array $items, callable $block): void
     {
@@ -78,11 +74,9 @@ final class Coroutine
     /**
      * Start a non-blocking task inside the current coroutine context.
      *
-     * @param callable $block
      * @param mixed ...$args
-     * @return int
-     * @see Coroutine::run()
      *
+     * @see Coroutine::run()
      */
     public static function go(callable $block, ...$args): int
     {

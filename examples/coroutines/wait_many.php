@@ -8,12 +8,14 @@ Coroutine::run(function () {
     [$greeting, $farewell] = Coroutine::wait([
         function () {
             Coroutine::usleep(500);
-            return "hello";
+
+            return 'hello';
         },
         function () {
             Coroutine::sleep(3);
-            return "goodbye";
-        }
+
+            return 'goodbye';
+        },
     ]);
 
     // Only takes 3, not 3.5, seconds.

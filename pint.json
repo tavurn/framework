@@ -1,0 +1,6 @@
+{
+  "preset": "laravel",
+  "rules": {
+    "Laravel/laravel_phpdoc_alignment": false
+  }
+}

@@ -2,7 +2,6 @@
 
 namespace Tavurn\Concerns\Support;
 
-
 use InvalidArgumentException;
 
 /**
