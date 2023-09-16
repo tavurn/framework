@@ -36,7 +36,7 @@ final class Coroutine
         $results = [];
 
         foreach ($group as $identifier => $block) {
-            self::go(function () use ($waitGroup, $identifier, &$results, $block) {
+            Coroutine::go(function () use ($waitGroup, $identifier, &$results, $block) {
                 $waitGroup->add();
                 $results[$identifier] = $block();
                 $waitGroup->done();
@@ -50,7 +50,7 @@ final class Coroutine
 
     public static function waitSingle(callable $block): mixed
     {
-        return self::wait([$block])[0];
+        return Coroutine::wait([$block])[0];
     }
 
     public static function sleep(int $seconds): void
@@ -66,13 +66,14 @@ final class Coroutine
     /**
      * Start a non-blocking task inside the current coroutine context.
      *
+     * @param callable $block
+     * @param mixed ...$args
+     * @return int
      * @see Coroutine::run()
      *
-     * @param callable $block
-     * @return int
      */
-    public static function go(callable $block): int
+    public static function go(callable $block, ...$args): int
     {
-        return go($block);
+        return go($block, ...$args);
     }
 }
