@@ -64,6 +64,18 @@ final class Coroutine
     }
 
     /**
+     * @param array<int, mixed> $items
+     * @param callable $block
+     * @return void
+     */
+    public static function each(array $items, callable $block): void
+    {
+        foreach ($items as $item) {
+            Coroutine::go($block, $item);
+        }
+    }
+
+    /**
      * Start a non-blocking task inside the current coroutine context.
      *
      * @param callable $block
