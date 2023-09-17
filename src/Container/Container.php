@@ -45,7 +45,7 @@ class Container implements ContainerContract
         $constructor = (new ReflectionClass($abstract))->getConstructor();
 
         if (! $constructor) {
-            throw new ContainerException("can not instantiate [$abstract] because it doesn't have a constructor");
+            return new $abstract;
         }
 
         $parameters = $this->getParametersFor($constructor);
