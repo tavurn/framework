@@ -8,12 +8,12 @@ abstract class Facade
 
     abstract protected static function getContainerAccessor(): string;
 
-    public static function __callStatic(string $name, array $arguments)
+    public static function __callStatic(string $name, array $arguments): mixed
     {
         if (! isset(static::$instance)) {
             static::$instance = app(static::getContainerAccessor());
         }
 
-        static::$instance->{$name}(...$arguments);
+        return static::$instance->{$name}(...$arguments);
     }
 }
