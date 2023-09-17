@@ -71,10 +71,12 @@ class Application extends Container implements RequestHandlerInterface
 
     public function bootServiceProviders(array $providers): void
     {
-        Coroutine::each(
-            $providers,
-            fn (ServiceProvider $provider) => $provider->booting(),
-        );
+        Coroutine::run(function () use ($providers) {
+            Coroutine::each(
+                $providers,
+                fn (ServiceProvider $provider) => $provider->booting(),
+            );
+        });
     }
 
     public function start(): never

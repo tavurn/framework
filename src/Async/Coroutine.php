@@ -66,11 +66,9 @@ final class Coroutine
      */
     public static function each(array $items, callable $block): void
     {
-        Coroutine::run(function () use ($items, $block) {
-            foreach ($items as $item) {
-                Coroutine::go($block, $item);
-            }
-        });
+        foreach ($items as $item) {
+            Coroutine::go($block, $item);
+        }
     }
 
     /**
@@ -83,5 +81,10 @@ final class Coroutine
     public static function go(callable $block, ...$args): int
     {
         return go($block, ...$args);
+    }
+
+    public static function getCid(): int
+    {
+        return \OpenSwoole\Coroutine::getCid();
     }
 }
