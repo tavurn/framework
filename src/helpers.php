@@ -1,23 +1,40 @@
 <?php
 
-use Tavurn\Application;
-use Tavurn\Async\Future;
+/** @noinspection PhpFullyQualifiedNameUsageInspection */
+if (! function_exists('app')) {
+    /**
+     * Get an instance of the global application instance.
+     * If an `$abstract` parameter is passed, you will be returned an instance
+     * bound to that abstract.
+     *
+     * @template T
+     *
+     * @param class-string<T>|null $abstract
+     * @return \Tavurn\Application|T
+     */
+    function app(string $abstract = null): mixed
+    {
+        if (! is_null($abstract)) {
+            return \Tavurn\Application::instance()->get($abstract);
+        }
 
-function app(): Application
-{
-    return Application::instance();
+        return \Tavurn\Application::instance();
+    }
 }
 
-/**
- * Wraps the given function block in a lazy future.
- *
- * @see Future::$await
- *
- * @template T
- * @param callable(): T $block
- * @return Future<T>
- */
-function async(callable $block): Future
-{
-    return new Future($block);
+if (! function_exists('async')) {
+    /**
+     * Wraps the given function block in a lazy future.
+     *
+     * @param callable(): T $block
+     * @return \Tavurn\Async\Future<T>
+     *
+     * @see Future::$await
+     *
+     * @template T
+     */
+    function async(callable $block): Tavurn\Async\Future
+    {
+        return new \Tavurn\Async\Future($block);
+    }
 }
