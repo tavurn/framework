@@ -24,7 +24,7 @@ class EventServiceProvider extends ServiceProvider implements ListenerProviderIn
         });
     }
 
-    public function callableArrayFromClass($name): array
+    public function callableArrayFromClass(string $name): array
     {
         return [$this->container->make($name), 'handle'];
     }
