@@ -1,6 +1,9 @@
 {
   "preset": "laravel",
   "rules": {
-    "Laravel/laravel_phpdoc_alignment": false
+    "Laravel/laravel_phpdoc_alignment": false,
+    "concat_space": {
+      "spacing": "one"
+    }
   }
 }

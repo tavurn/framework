@@ -2,7 +2,7 @@
 
 use Tavurn\Async\Coroutine;
 
-require __DIR__.'/../../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 Coroutine::run(function () {
     $future = async(function () {

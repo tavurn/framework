@@ -85,7 +85,7 @@ class Application extends Container implements RequestHandlerInterface
 
         $this->server->start();
 
-        exit('The server has stopped'.PHP_EOL);
+        exit('The server has stopped' . PHP_EOL);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface

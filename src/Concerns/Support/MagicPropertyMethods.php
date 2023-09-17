@@ -18,7 +18,7 @@ trait MagicPropertyMethods
         $allowed = array_values($this->allowedCalls);
 
         if (! in_array($name, $allowed)) {
-            throw new InvalidArgumentException("property [$name] does not exist on ".static::class);
+            throw new InvalidArgumentException("property [$name] does not exist on " . static::class);
         }
 
         if (isset($this->allowedCalls[$name])) {
