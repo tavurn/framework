@@ -66,9 +66,11 @@ final class Coroutine
      */
     public static function each(array $items, callable $block): void
     {
-        foreach ($items as $item) {
-            Coroutine::go($block, $item);
-        }
+        Coroutine::run(function () use ($items, $block) {
+            foreach ($items as $item) {
+                Coroutine::go($block, $item);
+            }
+        });
     }
 
     /**
