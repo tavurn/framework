@@ -1,15 +1,13 @@
 <?php
 
-/** @noinspection PhpMultipleClassDeclarationsInspection */
-/** @noinspection DuplicatedCode */
-
 require __DIR__.'/../../vendor/autoload.php';
 
-use Psr\EventDispatcher\ListenerProviderInterface;
+use Tavurn\Container\Container;
 use Tavurn\Contracts\Events\Stoppable;
 use Tavurn\Events\Dispatcher;
+use Tavurn\Providers\EventServiceProvider as ServiceProvider;
 
-class Event implements Stoppable
+class MessageEvent implements Stoppable
 {
     public string $message;
 
@@ -26,36 +24,25 @@ class Event implements Stoppable
 
 class Listener
 {
-    public function handle(Event $event): void
+    public function handle(MessageEvent $event): void
     {
         echo $event->message;
     }
 }
 
-$provider = new class implements ListenerProviderInterface
+class EventServiceProvider extends ServiceProvider
 {
     protected array $listeners = [
-        Event::class => [
+        MessageEvent::class => [
             Listener::class,
         ],
     ];
+}
 
-    public function callableArrayFromClass($name): array
-    {
-        return [new $name, 'handle'];
-    }
+$container = new Container;
 
-    public function getListenersForEvent(object $event): iterable
-    {
-        $listeners = $this->listeners[$event::class] ?? [];
+$dispatcher = new Dispatcher(new EventServiceProvider($container));
 
-        return array_map(
-            fn ($listener) => $this->callableArrayFromClass($listener),
-            $listeners,
-        );
-    }
-};
+$dispatcher->dispatch(new MessageEvent('Hello!'));
 
-$dispatcher = new Dispatcher($provider);
-
-$dispatcher->dispatch(new Event('Hello!'));
+// MessageEvent does not get emitted, and the listeners will not be called.
