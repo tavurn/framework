@@ -24,6 +24,7 @@ final class Context
 
             if (! isset($context[$key])) {
                 $cid = Coroutine::getPcid();
+
                 continue;
             }
 

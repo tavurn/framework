@@ -5,7 +5,6 @@ namespace Tavurn\Http;
 use OpenSwoole\Core\Psr\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Tavurn\Async\Context;
 use Tavurn\Contracts\Container\Container;
 use Tavurn\Contracts\Http\Kernel as KernelContract;
 
