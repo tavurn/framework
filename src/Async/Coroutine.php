@@ -7,6 +7,8 @@
 namespace Tavurn\Async;
 
 use OpenSwoole\Core\Coroutine\WaitGroup;
+use OpenSwoole\Coroutine\Context;
+use RuntimeException;
 
 final class Coroutine
 {
@@ -71,6 +73,17 @@ final class Coroutine
         }
     }
 
+    public static function getContext(int $cid = 0): Context
+    {
+        $cid = $cid === 0 ? Coroutine::getCid() : $cid;
+
+        if (is_null($context = \OpenSwoole\Coroutine::getContext($cid))) {
+            throw new RuntimeException("Context for coroutine [{$cid}] is undefined");
+        }
+
+        return $context;
+    }
+
     /**
      * Start a non-blocking task inside the current coroutine context.
      *
@@ -86,5 +99,10 @@ final class Coroutine
     public static function getCid(): int
     {
         return \OpenSwoole\Coroutine::getCid();
+    }
+
+    public static function getPcid(): int
+    {
+        return \OpenSwoole\Coroutine::getPcid();
     }
 }

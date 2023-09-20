@@ -7,7 +7,9 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionFunction;
 use ReflectionFunctionAbstract;
+use Tavurn\Async\Context;
 use Tavurn\Contracts\Container\Container as ContainerContract;
+use Tavurn\Contracts\Container\Contextual;
 
 class Container implements ContainerContract
 {
@@ -17,14 +19,26 @@ class Container implements ContainerContract
 
     protected array $resolved = [];
 
-    public function bind(string $abstract, callable $concrete, bool $singleton = false): void
-    {
+    protected array $contextual = [];
+
+    public function bind(
+        string $abstract,
+        callable $concrete,
+        bool $singleton = false,
+    ): void {
         $this->bindings[$abstract] = compact('concrete', 'singleton');
     }
 
     public function singleton(string $abstract, callable $concrete): void
     {
         $this->bind($abstract, $concrete, true);
+    }
+
+    public function contextual(string $abstract, mixed $instance): void
+    {
+        Context::set($abstract, $instance);
+
+        $this->contextual[$abstract] = true;
     }
 
     /**
@@ -42,15 +56,25 @@ class Container implements ContainerContract
             throw new ContainerException("can not instantiate [$abstract] because it is not bound nor a class");
         }
 
-        $constructor = (new ReflectionClass($abstract))->getConstructor();
+        return $this->build($abstract);
+    }
+
+    /**
+     * @throws ContainerException
+     * @throws EntryNotFoundException
+     * @throws ReflectionException
+     */
+    public function build(string $class): mixed
+    {
+        $constructor = (new ReflectionClass($class))->getConstructor();
 
         if (! $constructor) {
-            return new $abstract;
+            return new $class;
         }
 
         $parameters = $this->getParametersFor($constructor);
 
-        return new $abstract(...$parameters);
+        return new $class(...$parameters);
     }
 
     /**
@@ -60,6 +84,10 @@ class Container implements ContainerContract
      */
     public function get(string $id): mixed
     {
+        if ($this->isContextual($id)) {
+            return Context::get($id);
+        }
+
         if (! $this->has($id)) {
             throw new EntryNotFoundException("cannot find entry [$id]");
         }
@@ -76,12 +104,6 @@ class Container implements ContainerContract
     }
 
     /**
-     * @template T
-     *
-     * @param string[]|callable(mixed ...): T $block
-     * @param mixed ...$parameters
-     * @return T|mixed
-     *
      * @throws EntryNotFoundException
      * @throws ReflectionException
      * @throws ContainerException
@@ -144,7 +166,7 @@ class Container implements ContainerContract
 
             if (in_array($name, array_keys($merge))) {
                 $built = $merge[$name];
-            } elseif (! $this->has($abstract)) {
+            } elseif (! $this->has($abstract) && ! $this->isContextual($abstract)) {
                 $built = array_shift($merge);
             } else {
                 $built = $this->get($abstract);
@@ -170,6 +192,17 @@ class Container implements ContainerContract
     public function hasSingleton(string $abstract): bool
     {
         return isset($this->instances[$abstract]);
+    }
+
+    public function isContextual(string $abstract): bool
+    {
+        if (! in_array($abstract, $this->contextual)) {
+            $this->contextual[$abstract] = $contextual = in_array(Contextual::class, class_implements($abstract));
+
+            return $contextual;
+        }
+
+        return $this->contextual[$abstract];
     }
 
     public function has(string $id): bool

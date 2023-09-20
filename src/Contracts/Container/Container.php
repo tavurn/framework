@@ -10,6 +10,8 @@ interface Container extends ContainerInterface
 
     public function singleton(string $abstract, callable $concrete): void;
 
+    public function contextual(string $abstract, mixed $instance): void;
+
     /**
      * @template T
      *
@@ -21,10 +23,18 @@ interface Container extends ContainerInterface
     /**
      * @template T
      *
-     * @param callable(): T $block
+     * @param class-string<T> $class
      * @return T
      */
-    public function call(callable $block): mixed;
+    public function build(string $class): mixed;
+
+    /**
+     * @template T
+     *
+     * @param array<int, string>|callable(mixed ...): T $block
+     * @return T
+     */
+    public function call($block, mixed ...$parameters): mixed;
 
     /**
      * @template T
