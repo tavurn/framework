@@ -18,16 +18,9 @@ class Kernel implements KernelContract
         $this->container = $container;
     }
 
-    function test(ServerRequestInterface $request)
-    {
-        echo $request->getUri();
-    }
-
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->container->contextual(ServerRequestInterface::class, $request);
-
-        $this->container->call($this->test(...));
 
         return new Response('Hello');
     }
