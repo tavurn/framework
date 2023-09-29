@@ -8,9 +8,6 @@
         },
         "files": [
             "src/helpers.php"
-        ],
-        "exclude-from-classmap": [
-            "examples/"
         ]
     },
     "authors": [
@@ -30,8 +27,5 @@
     "require-dev": {
         "openswoole/ide-helper": "^22.0.1",
         "laravel/pint": "^1.13"
-    },
-    "archive": {
-        "exclude": ["examples/"]
     }
 }
