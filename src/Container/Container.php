@@ -126,7 +126,7 @@ class Container implements ContainerContract
         $parameters = array_map(
             fn ($parameter) => [
                 'name' => $parameter->getName(),
-                'abstract' => $parameter->getType()->getName(),
+                'abstract' => $parameter->getType()?->getName(),
             ],
             $function->getParameters()
         );
@@ -166,7 +166,7 @@ class Container implements ContainerContract
 
             if (in_array($name, array_keys($merge))) {
                 $built = $merge[$name];
-            } elseif (! $this->has($abstract) && ! $this->isContextual($abstract)) {
+            } elseif (is_null($abstract) || ! $this->has($abstract) && ! $this->isContextual($abstract)) {
                 $built = array_shift($merge);
             } else {
                 $built = $this->get($abstract);
