@@ -1,6 +1,6 @@
 <?php
 
-namespace Tavurn\Concerns\Support;
+namespace Tavurn\Support\Concerns;
 
 use InvalidArgumentException;
 
