@@ -38,3 +38,27 @@ if (! function_exists('async')) {
         return new \Tavurn\Async\Future($block);
     }
 }
+
+if (! function_exists('report')) {
+    /**
+     * Passes a throwable into the bound Handler.
+     */
+    function report(Throwable $error): void
+    {
+        app(\Tavurn\Contracts\Exceptions\Handler::class)->report($error);
+    }
+}
+
+if (! function_exists('base_path')) {
+    /**
+     * Get the project's base path.
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    function base_path(string $path = ''): string
+    {
+        return app()->basePath($path);
+    }
+}
