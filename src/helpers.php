@@ -52,10 +52,6 @@ if (! function_exists('report')) {
 if (! function_exists('base_path')) {
     /**
      * Get the project's base path.
-     *
-     * @param string $path
-     *
-     * @return string
      */
     function base_path(string $path = ''): string
     {

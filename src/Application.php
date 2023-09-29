@@ -25,7 +25,7 @@ class Application extends Container implements RequestHandlerInterface
      */
     protected array $providers = [];
 
-    public function __construct(Server $server, ?string $basePath = null)
+    public function __construct(Server $server, string $basePath = null)
     {
         if ($basePath) {
             $this->basePath = $basePath;

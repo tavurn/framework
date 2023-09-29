@@ -21,7 +21,7 @@ class ConfigServiceProvider extends ServiceProvider
 
             $items[$base] = require ! str_ends_with($file, '/')
                 ? "{$path}/{$file}"
-                : $path.$file;
+                : $path . $file;
         }
 
         $this->container->singleton(
