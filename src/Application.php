@@ -9,7 +9,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Tavurn\Async\Coroutine;
 use Tavurn\Container\Container;
 use Tavurn\Contracts\Container\Container as ContainerContract;
-use Tavurn\Http\Kernel;
+use Tavurn\Contracts\Http\Kernel;
 use Tavurn\Support\ServiceProvider;
 
 class Application extends Container implements RequestHandlerInterface
@@ -53,7 +53,9 @@ class Application extends Container implements RequestHandlerInterface
     public static function getCoreProviders(): array
     {
         return [
-            \Tavurn\Providers\EventServiceProvider::class,
+            \Tavurn\Providers\ConfigServiceProvider::class,
+            \Tavurn\Providers\ExceptionServiceProvider::class,
+            \Tavurn\Providers\TavurnServiceProvider::class,
         ];
     }
 
@@ -106,7 +108,7 @@ class Application extends Container implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $kernel = $this->make(Kernel::class);
+        $kernel = $this->get(Kernel::class);
 
         return $kernel->handle($request);
     }
