@@ -16,6 +16,8 @@ class Application extends Container implements RequestHandlerInterface
 {
     protected static Application $instance;
 
+    protected string $basePath;
+
     protected Server $server;
 
     /**
@@ -23,8 +25,12 @@ class Application extends Container implements RequestHandlerInterface
      */
     protected array $providers = [];
 
-    public function __construct(Server $server)
+    public function __construct(Server $server, ?string $basePath = null)
     {
+        if ($basePath) {
+            $this->basePath = $basePath;
+        }
+
         $this->singleton(ContainerContract::class, fn () => $this);
 
         static::$instance = $this;
@@ -37,6 +43,11 @@ class Application extends Container implements RequestHandlerInterface
     public static function instance(): self
     {
         return self::$instance;
+    }
+
+    public function basePath(string $path = ''): string
+    {
+        return realpath($this->basePath . '/' . $path);
     }
 
     public static function getCoreProviders(): array
