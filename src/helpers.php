@@ -7,10 +7,10 @@ if (! function_exists('app')) {
      * If an `$abstract` parameter is passed, you will be returned an instance
      * bound to that abstract.
      *
-     * @template T
-     *
      * @param class-string<T>|null $abstract
      * @return \Tavurn\Application|T
+     *
+     * @template T
      */
     function app(string $abstract = null): mixed
     {
