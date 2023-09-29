@@ -4,7 +4,8 @@ namespace Tavurn\Providers;
 
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Tavurn\Contracts\Container\Container;
-use Tavurn\Contracts\Events\Dispatcher;
+use Tavurn\Contracts\Events\Dispatcher as DispatcherContract;
+use Tavurn\Events\Dispatcher;
 use Tavurn\Support\ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider implements ListenerProviderInterface
@@ -19,8 +20,8 @@ class EventServiceProvider extends ServiceProvider implements ListenerProviderIn
             return $provider;
         });
 
-        $this->container->singleton(Dispatcher::class, function (Container $container) {
-            return new \Tavurn\Events\Dispatcher($container->get(ListenerProviderInterface::class));
+        $this->container->singleton(DispatcherContract::class, function (Container $container) {
+            return new Dispatcher($container->get(ListenerProviderInterface::class));
         });
     }
 
