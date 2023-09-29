@@ -7,21 +7,17 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Tavurn\Contracts\Container\Container;
 use Tavurn\Contracts\Events\Dispatcher;
-use Tavurn\Contracts\Exceptions\Handler;
 use Tavurn\Contracts\Http\Kernel as KernelContract;
+use Tavurn\Facades\Exception;
 use Throwable;
 
 class Kernel implements KernelContract
 {
     protected Container $container;
 
-    protected Handler $handler;
-
-    public function __construct(Container $container, Handler $handler)
+    public function __construct(Container $container)
     {
         $this->container = $container;
-
-        $this->handler = $handler;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -31,11 +27,11 @@ class Kernel implements KernelContract
         try {
             $response = new Response('Hello');
         } catch (Throwable $e) {
-            if ($this->handler->shouldReport($e)) {
-                $this->handler->report($e);
+            if (Exception::shouldReport($e)) {
+                report($e);
             }
 
-            $response = $this->handler->render($request, $e);
+            $response = Exception::render($request, $e);
         }
 
         $this->container->get(Dispatcher::class)->dispatch(
