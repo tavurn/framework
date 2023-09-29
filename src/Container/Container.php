@@ -21,15 +21,30 @@ class Container implements ContainerContract
 
     protected array $contextual = [];
 
+    /**
+     * @param string $abstract
+     * @param callable|class-string $concrete
+     * @param bool $singleton
+     * @return void
+     */
     public function bind(
         string $abstract,
-        callable $concrete,
+        $concrete,
         bool $singleton = false,
     ): void {
+        if (is_string($concrete)) {
+            $concrete = $this->getClosureFor($concrete);
+        }
+
         $this->bindings[$abstract] = compact('concrete', 'singleton');
     }
 
-    public function singleton(string $abstract, callable $concrete): void
+    /**
+     * @param string $abstract
+     * @param callable|class-string $concrete
+     * @return void
+     */
+    public function singleton(string $abstract, $concrete): void
     {
         $this->bind($abstract, $concrete, true);
     }
@@ -39,6 +54,13 @@ class Container implements ContainerContract
         Context::set($abstract, $instance);
 
         $this->contextual[$abstract] = true;
+    }
+
+    protected function getClosureFor(string $abstract): Closure
+    {
+        return function (ContainerContract $app) use ($abstract) {
+            return $app->make($abstract);
+        };
     }
 
     /**
