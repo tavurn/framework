@@ -4,12 +4,12 @@ namespace Tavurn\Container;
 
 use Closure;
 use ReflectionClass;
-use ReflectionException;
+use ReflectionMethod;
 use ReflectionFunction;
 use ReflectionFunctionAbstract;
-use Tavurn\Async\Context;
 use Tavurn\Contracts\Container\Container as ContainerContract;
 use Tavurn\Contracts\Container\Contextual;
+use Tavurn\Foundation\Async\Context;
 
 class Container implements ContainerContract
 {
@@ -21,12 +21,6 @@ class Container implements ContainerContract
 
     protected array $contextual = [];
 
-    /**
-     * @param string $abstract
-     * @param callable|class-string $concrete
-     * @param bool $singleton
-     * @return void
-     */
     public function bind(
         string $abstract,
         $concrete,
@@ -39,11 +33,6 @@ class Container implements ContainerContract
         $this->bindings[$abstract] = compact('concrete', 'singleton');
     }
 
-    /**
-     * @param string $abstract
-     * @param callable|class-string $concrete
-     * @return void
-     */
     public function singleton(string $abstract, $concrete): void
     {
         $this->bind($abstract, $concrete, true);
@@ -58,16 +47,11 @@ class Container implements ContainerContract
 
     protected function getClosureFor(string $abstract): Closure
     {
-        return function (ContainerContract $app) use ($abstract) {
-            return $app->make($abstract);
+        return function (ContainerContract $container) use ($abstract) {
+            return $container->make($abstract);
         };
     }
 
-    /**
-     * @throws ReflectionException
-     * @throws ContainerException
-     * @throws EntryNotFoundException
-     */
     public function make(string $abstract): mixed
     {
         if ($this->has($abstract)) {
@@ -81,11 +65,6 @@ class Container implements ContainerContract
         return $this->build($abstract);
     }
 
-    /**
-     * @throws ContainerException
-     * @throws EntryNotFoundException
-     * @throws ReflectionException
-     */
     public function build(string $class): mixed
     {
         $constructor = (new ReflectionClass($class))->getConstructor();
@@ -99,11 +78,6 @@ class Container implements ContainerContract
         return new $class(...$parameters);
     }
 
-    /**
-     * @throws EntryNotFoundException
-     * @throws ReflectionException
-     * @throws ContainerException
-     */
     public function get(string $id): mixed
     {
         if ($this->isContextual($id)) {
@@ -119,17 +93,12 @@ class Container implements ContainerContract
         }
 
         if (! $this->hasSingleton($id)) {
-            $this->instances[$id] = $this->make($id);
+            $this->instances[$id] = $this->bindings[$id]['concrete']($this);
         }
 
         return $this->instances[$id];
     }
 
-    /**
-     * @throws EntryNotFoundException
-     * @throws ReflectionException
-     * @throws ContainerException
-     */
     public function call($block, ...$parameters): mixed
     {
         $block = $block(...);
@@ -141,7 +110,7 @@ class Container implements ContainerContract
 
     protected function resolve(ReflectionFunctionAbstract $function): void
     {
-        $scope = $function->getClosureScopeClass()?->getName();
+        $scope = $this->getDeclaringClass($function);
 
         $name = $function->getName();
 
@@ -161,16 +130,12 @@ class Container implements ContainerContract
 
     /**
      * @param Closure|ReflectionFunctionAbstract $closure
-     *
-     * @throws EntryNotFoundException
-     * @throws ReflectionException
-     * @throws ContainerException
      */
     protected function getParametersFor($closure, array $merge = []): iterable
     {
-        $function = is_callable($closure) ? new ReflectionFunction($closure) : $closure;
+        $function = $closure instanceof Closure ? new ReflectionFunction($closure) : $closure;
 
-        $scope = $function->getClosureScopeClass()?->getName();
+        $scope = $this->getDeclaringClass($function);
 
         $name = $function->getName();
 
@@ -178,7 +143,7 @@ class Container implements ContainerContract
             $this->resolve($function);
         }
 
-        $parameters = is_null($scope)
+        $parameters = ! $scope
             ? $this->resolved[$name]
             : $this->resolved[$scope][$name];
 
@@ -198,6 +163,13 @@ class Container implements ContainerContract
         }
     }
 
+    protected function getDeclaringClass(ReflectionFunctionAbstract $function): ?string
+    {
+        return $function instanceof ReflectionMethod
+            ? $function->getDeclaringClass()->getName()
+            : $function->getClosureScopeClass()?->getName();
+    }
+
     protected function isResolved(?string $scope, string $name): bool
     {
         return is_null($scope)
@@ -207,8 +179,7 @@ class Container implements ContainerContract
 
     public function isSingleton(string $abstract): bool
     {
-        return $this->has($abstract)
-            && $this->bindings[$abstract]['singleton'];
+        return $this->bindings[$abstract]['singleton'];
     }
 
     public function hasSingleton(string $abstract): bool
