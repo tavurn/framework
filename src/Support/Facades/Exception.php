@@ -1,6 +1,6 @@
 <?php
 
-namespace Tavurn\Facades;
+namespace Tavurn\Support\Facades;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

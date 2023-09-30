@@ -1,6 +1,6 @@
 <?php
 
-namespace Tavurn\Async;
+namespace Tavurn\Foundation\Async;
 
 use Closure;
 use RuntimeException;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tavurn\Facades;
+namespace Tavurn\Support\Facades;
 
 use Tavurn\Support\Facade;
 
