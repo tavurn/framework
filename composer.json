@@ -7,7 +7,7 @@
             "Tavurn\\": "src/"
         },
         "files": [
-            "src/helpers.php"
+            "src/Foundation/helpers.php"
         ]
     },
     "authors": [
@@ -22,7 +22,8 @@
         "illuminate/config": "^v10.25.2",
         "openswoole/core": "^22.1.4",
         "psr/event-dispatcher": "1.0.0",
-        "psr/container": "2.0.2"
+        "psr/container": "2.0.2",
+        "symfony/finder": "^6.3"
     },
     "require-dev": {
         "openswoole/ide-helper": "^22.0.1",

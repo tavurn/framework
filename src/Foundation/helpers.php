@@ -1,6 +1,5 @@
 <?php
 
-/** @noinspection PhpFullyQualifiedNameUsageInspection */
 if (! function_exists('app')) {
     /**
      * Get an instance of the global application instance.
@@ -8,17 +7,17 @@ if (! function_exists('app')) {
      * bound to that abstract.
      *
      * @param class-string<T>|null $abstract
-     * @return \Tavurn\Application|T
+     * @return \Tavurn\Foundation\Application|T
      *
      * @template T
      */
     function app(string $abstract = null): mixed
     {
         if (! is_null($abstract)) {
-            return \Tavurn\Application::instance()->get($abstract);
+            return \Tavurn\Foundation\Application::getInstance()->get($abstract);
         }
 
-        return \Tavurn\Application::instance();
+        return \Tavurn\Foundation\Application::getInstance();
     }
 }
 
@@ -27,15 +26,15 @@ if (! function_exists('async')) {
      * Wraps the given function block in a lazy future.
      *
      * @param callable(): T $block
-     * @return \Tavurn\Async\Future<T>
+     * @return \Tavurn\Foundation\Async\Future<T>
      *
      * @see Future::$await
      *
      * @template T
      */
-    function async(callable $block): Tavurn\Async\Future
+    function async(callable $block): \Tavurn\Foundation\Async\Future
     {
-        return new \Tavurn\Async\Future($block);
+        return new \Tavurn\Foundation\Async\Future($block);
     }
 }
 
