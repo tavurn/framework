@@ -6,9 +6,9 @@ use Tavurn\Contracts\Container\Container;
 
 abstract class ServiceProvider
 {
-    protected readonly Container $container;
+    protected Container $container;
 
-    public function __construct(Container $container)
+    public function __construct(Container &$container)
     {
         $this->container = $container;
     }

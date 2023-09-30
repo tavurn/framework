@@ -1,6 +1,6 @@
 <?php
 
-namespace Tavurn\Providers;
+namespace Tavurn\Support\Providers;
 
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Tavurn\Contracts\Events\Dispatcher as DispatcherContract;

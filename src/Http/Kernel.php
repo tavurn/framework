@@ -5,33 +5,29 @@ namespace Tavurn\Http;
 use OpenSwoole\Core\Psr\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Tavurn\Contracts\Container\Container;
 use Tavurn\Contracts\Events\Dispatcher;
 use Tavurn\Contracts\Http\Kernel as KernelContract;
+use Tavurn\Foundation\Application;
 use Tavurn\Support\Facades\Exception;
 use Throwable;
 
 class Kernel implements KernelContract
 {
-    protected Container $container;
+    protected Application $app;
 
     protected static array $bootstrappers = [
         \Tavurn\Foundation\Bootstrap\LoadConfiguration::class,
         \Tavurn\Foundation\Bootstrap\RegisterConfiguredProviders::class,
     ];
 
-    public function __construct()
+    public function __construct(Application $app)
     {
-        $this->container = app(Container::class);
+        $this->app = $app;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->container->contextual(ServerRequestInterface::class, $request);
-
-        if (! app()->hasBeenBootstrapped()) {
-            app()->bootstrapWith(static::$bootstrappers);
-        }
+        $this->app->contextual(ServerRequestInterface::class, $request);
 
         try {
             $response = new Response('Hello');
@@ -43,10 +39,17 @@ class Kernel implements KernelContract
             $response = Exception::render($request, $e);
         }
 
-        $this->container->get(Dispatcher::class)->dispatch(
+        $this->app->get(Dispatcher::class)->dispatch(
             new RequestHandled($request, $response),
         );
 
         return $response;
+    }
+
+    public function bootstrap(): void
+    {
+        if (! $this->app->hasBeenBootstrapped()) {
+            $this->app->bootstrapWith(static::$bootstrappers);
+        }
     }
 }

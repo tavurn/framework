@@ -58,7 +58,7 @@ class Application extends Container implements RequestHandlerInterface
     public static function getCoreProviders(): array
     {
         return [
-            \Tavurn\Providers\ExceptionServiceProvider::class,
+            \Tavurn\Foundation\Providers\ExceptionServiceProvider::class,
         ];
     }
 
@@ -112,6 +112,11 @@ class Application extends Container implements RequestHandlerInterface
         );
 
         $this->instance(
+            Application::class,
+            $this,
+        );
+
+        $this->instance(
             Server::class,
             $this->server,
         );
@@ -133,6 +138,8 @@ class Application extends Container implements RequestHandlerInterface
     {
         $this->boot();
 
+        $this->get(Kernel::class)->bootstrap();
+
         $this->server->setHandler($this);
 
         $this->server->start();
@@ -150,7 +157,7 @@ class Application extends Container implements RequestHandlerInterface
         $this->hasBeenBootstrapped = true;
 
         foreach ($bootstrappers as $bootstrapper) {
-            $this->make($bootstrapper)->bootstrap($this);
+            $this->make($bootstrapper)->bootstrap(static::getInstance());
         }
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tavurn\Providers;
+namespace Tavurn\Foundation\Providers;
 
 use Tavurn\Contracts\Container\Container;
 use Tavurn\Contracts\Exceptions\Handler as HandlerContract;
