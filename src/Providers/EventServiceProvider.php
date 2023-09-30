@@ -14,15 +14,14 @@ class EventServiceProvider extends ServiceProvider implements ListenerProviderIn
 
     public function register(): void
     {
-        $provider = $this;
-
-        $this->container->singleton(ListenerProviderInterface::class, function () use ($provider) {
-            return $provider;
+        $this->container->singleton(ListenerProviderInterface::class, function () {
+            return $this;
         });
 
-        $this->container->singleton(DispatcherContract::class, function (Container $container) {
-            return new Dispatcher($container->get(ListenerProviderInterface::class));
-        });
+        $this->container->singleton(
+            DispatcherContract::class,
+            Dispatcher::class,
+        );
     }
 
     public function callableArrayFromClass(string $name): array

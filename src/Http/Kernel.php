@@ -8,21 +8,30 @@ use Psr\Http\Message\ServerRequestInterface;
 use Tavurn\Contracts\Container\Container;
 use Tavurn\Contracts\Events\Dispatcher;
 use Tavurn\Contracts\Http\Kernel as KernelContract;
-use Tavurn\Facades\Exception;
+use Tavurn\Support\Facades\Exception;
 use Throwable;
 
 class Kernel implements KernelContract
 {
     protected Container $container;
 
-    public function __construct(Container $container)
+    protected static array $bootstrappers = [
+        \Tavurn\Foundation\Bootstrap\LoadConfiguration::class,
+        \Tavurn\Foundation\Bootstrap\RegisterConfiguredProviders::class,
+    ];
+
+    public function __construct()
     {
-        $this->container = $container;
+        $this->container = app(Container::class);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->container->contextual(ServerRequestInterface::class, $request);
+
+        if (! app()->hasBeenBootstrapped()) {
+            app()->bootstrapWith(static::$bootstrappers);
+        }
 
         try {
             $response = new Response('Hello');
