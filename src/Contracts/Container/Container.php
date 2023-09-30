@@ -6,9 +6,21 @@ use Psr\Container\ContainerInterface;
 
 interface Container extends ContainerInterface
 {
-    public function bind(string $abstract, callable $concrete, bool $singleton = false): void;
+    /**
+     * @param string $abstract
+     * @param callable|class-string $concrete
+     * @param bool $singleton
+     *
+     * @return void
+     */
+    public function bind(string $abstract, $concrete, bool $singleton = false): void;
 
-    public function singleton(string $abstract, callable $concrete): void;
+    /**
+     * @param string $abstract
+     * @param callable|class-string $concrete
+     * @return void
+     */
+    public function singleton(string $abstract, $concrete): void;
 
     public function contextual(string $abstract, mixed $instance): void;
 
