@@ -3,7 +3,6 @@
 namespace Tavurn\Providers;
 
 use Psr\EventDispatcher\ListenerProviderInterface;
-use Tavurn\Contracts\Container\Container;
 use Tavurn\Contracts\Events\Dispatcher as DispatcherContract;
 use Tavurn\Events\Dispatcher;
 use Tavurn\Support\ServiceProvider;

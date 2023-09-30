@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Tavurn\Foundation\Async;
 
 use OpenSwoole\Core\Coroutine\WaitGroup;

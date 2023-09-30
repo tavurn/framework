@@ -4,9 +4,9 @@ namespace Tavurn\Container;
 
 use Closure;
 use ReflectionClass;
-use ReflectionMethod;
 use ReflectionFunction;
 use ReflectionFunctionAbstract;
+use ReflectionMethod;
 use Tavurn\Contracts\Container\Container as ContainerContract;
 use Tavurn\Contracts\Container\Contextual;
 use Tavurn\Foundation\Async\Context;

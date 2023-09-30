@@ -7,18 +7,12 @@ use Psr\Container\ContainerInterface;
 interface Container extends ContainerInterface
 {
     /**
-     * @param string $abstract
      * @param callable|class-string $concrete
-     * @param bool $singleton
-     *
-     * @return void
      */
     public function bind(string $abstract, $concrete, bool $singleton = false): void;
 
     /**
-     * @param string $abstract
      * @param callable|class-string $concrete
-     * @return void
      */
     public function singleton(string $abstract, $concrete): void;
 

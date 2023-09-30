@@ -66,7 +66,6 @@ class Application extends Container implements RequestHandlerInterface
      * @template T
      *
      * @param class-string<T> $provider
-     *
      * @return T|null
      */
     public function getProvider(string $provider): ?ServiceProvider
@@ -82,7 +81,6 @@ class Application extends Container implements RequestHandlerInterface
      * @template T
      *
      * @param class-string<T> $provider
-     *
      * @return T
      */
     public function register(string $provider): ServiceProvider

@@ -32,7 +32,7 @@ if (! function_exists('async')) {
      *
      * @template T
      */
-    function async(callable $block): \Tavurn\Foundation\Async\Future
+    function async(callable $block): Tavurn\Foundation\Async\Future
     {
         return new \Tavurn\Foundation\Async\Future($block);
     }
