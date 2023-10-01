@@ -11,7 +11,7 @@ class ExceptionServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->container->singleton(HandlerContract::class, function (Container $container) {
+        $this->app->singleton(HandlerContract::class, function (Container $container) {
             return new Handler($container);
         });
     }

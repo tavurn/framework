@@ -2,15 +2,15 @@
 
 namespace Tavurn\Support;
 
-use Tavurn\Contracts\Container\Container;
+use Tavurn\Foundation\Application;
 
 abstract class ServiceProvider
 {
-    protected Container $container;
+    protected Application $app;
 
-    public function __construct(Container &$container)
+    public function __construct(Application $application)
     {
-        $this->container = $container;
+        $this->app = $application;
     }
 
     public function register(): void
