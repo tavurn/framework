@@ -1,6 +1,6 @@
 <?php
 
-namespace Tavurn\Foundation\Async;
+namespace Tavurn\Async;
 
 final class Context
 {

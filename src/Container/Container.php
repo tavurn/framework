@@ -7,9 +7,9 @@ use ReflectionClass;
 use ReflectionFunction;
 use ReflectionFunctionAbstract;
 use ReflectionMethod;
+use Tavurn\Async\Context;
 use Tavurn\Contracts\Container\Container as ContainerContract;
 use Tavurn\Contracts\Container\Contextual;
-use Tavurn\Foundation\Async\Context;
 
 class Container implements ContainerContract
 {

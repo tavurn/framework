@@ -1,10 +1,11 @@
 <?php
 
-namespace Tavurn\Foundation\Async;
+namespace Tavurn\Async;
 
 use OpenSwoole\Core\Coroutine\WaitGroup;
 use OpenSwoole\Coroutine\Context;
 use RuntimeException;
+use function Tavurn\Foundation\Async\go;
 
 final class Coroutine
 {

@@ -4,6 +4,7 @@ namespace Tavurn\Foundation\Async;
 
 use Closure;
 use RuntimeException;
+use Tavurn\Async\Coroutine;
 use Tavurn\Support\Concerns\MagicPropertyMethods;
 
 /**

@@ -6,10 +6,10 @@ use OpenSwoole\Server;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Tavurn\Async\Coroutine;
 use Tavurn\Container\Container;
 use Tavurn\Contracts\Container\Container as ContainerContract;
 use Tavurn\Contracts\Http\Kernel;
-use Tavurn\Foundation\Async\Coroutine;
 use Tavurn\Support\ServiceProvider;
 
 class Application extends Container implements RequestHandlerInterface
