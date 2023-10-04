@@ -48,7 +48,7 @@ class Container implements ContainerContract
     protected function getClosureFor(string $abstract): Closure
     {
         return function (ContainerContract $container) use ($abstract) {
-            return $container->make($abstract);
+            return $container->build($abstract);
         };
     }
 
