@@ -32,6 +32,11 @@ class RouteServiceProvider extends ServiceProvider
             RouterContract::class,
             Router::class,
         );
+
+        $this->app->alias(
+            RouterContract::class,
+            'router',
+        );
     }
 
     public function __call(string $name, array $arguments)
