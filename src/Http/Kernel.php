@@ -7,6 +7,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Tavurn\Contracts\Events\Dispatcher;
 use Tavurn\Contracts\Exceptions\Handler;
 use Tavurn\Contracts\Http\Kernel as KernelContract;
+use Tavurn\Contracts\Http\Request as RequestContract;
 use Tavurn\Contracts\Routing\Router;
 use Tavurn\Foundation\Application;
 use Throwable;
@@ -30,6 +31,8 @@ class Kernel implements KernelContract
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $request = $this->gatherRequest($request);
+
         $this->app->contextual(ServerRequestInterface::class, $request);
 
         try {
@@ -47,6 +50,22 @@ class Kernel implements KernelContract
         );
 
         return $response;
+    }
+
+    protected function gatherRequest(ServerRequestInterface $request): RequestContract
+    {
+        return new Request(
+            $request->getUri(),
+            $request->getMethod(),
+            $request->getBody(),
+            $request->getHeaders(),
+            $request->getCookieParams(),
+            $request->getQueryParams(),
+            $request->getServerParams(),
+            $request->getUploadedFiles(),
+            $request->getParsedBody(),
+            $request->getProtocolVersion(),
+        );
     }
 
     protected function sendRequestThroughRouter(ServerRequestInterface $request): ResponseInterface
