@@ -20,6 +20,8 @@ class Container implements ContainerContract
 
     protected array $contextual = [];
 
+    protected array $aliases = [];
+
     public function bind(
         string $abstract,
         $concrete,
@@ -42,6 +44,11 @@ class Container implements ContainerContract
         Context::set($abstract, $instance);
 
         $this->contextual[$abstract] = true;
+    }
+
+    public function alias(string $abstract, string $alias): void
+    {
+        $this->aliases[$alias] = $abstract;
     }
 
     protected function getClosureFor(string $abstract): Closure
@@ -79,6 +86,8 @@ class Container implements ContainerContract
 
     public function get(string $id): mixed
     {
+        $id = $this->isAlias($id) ? $this->aliases[$id] : $id;
+
         if ($this->isContextual($id)) {
             return Context::get($id);
         }
@@ -147,7 +156,10 @@ class Container implements ContainerContract
             : $this->resolved[$scope][$name];
 
         foreach ($parameters as $parameter) {
-            $abstract = $parameter['abstract'];
+            $abstract = $this->isAlias($abstract = $parameter['abstract'])
+                ? $this->aliases[$abstract]
+                : $abstract;
+
             $name = $parameter['name'];
 
             if (in_array($name, array_keys($merge))) {
@@ -189,6 +201,11 @@ class Container implements ContainerContract
     public function isContextual(string $abstract): bool
     {
         return isset($this->contextual[$abstract]);
+    }
+
+    public function isAlias(string $alias): bool
+    {
+        return isset($this->aliases[$alias]);
     }
 
     public function has(string $id): bool

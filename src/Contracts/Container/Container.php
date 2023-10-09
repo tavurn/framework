@@ -18,6 +18,8 @@ interface Container extends ContainerInterface
 
     public function contextual(string $abstract, mixed $instance): void;
 
+    public function alias(string $abstract, string $alias): void;
+
     /**
      * @template T
      *
@@ -49,4 +51,6 @@ interface Container extends ContainerInterface
      * @return T
      */
     public function get(string $id);
+
+    public function isAlias(string $alias): bool;
 }
