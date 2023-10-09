@@ -55,7 +55,7 @@ class Handler implements HandlerContract
     public function render(ServerRequestInterface $request, Throwable $error): ResponseInterface
     {
         if (! method_exists($error, 'render')) {
-            return new Response('500 | Internal Server Error');
+            return new Response("500 | {$error->getMessage()}", 500, 'Internal Server Error');
         }
 
         return $this->container->call(

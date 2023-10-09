@@ -5,11 +5,11 @@ namespace Tavurn\Http;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class RequestHandled
+readonly class RequestHandled
 {
-    public readonly ServerRequestInterface $request;
+    public ServerRequestInterface $request;
 
-    public readonly ResponseInterface $response;
+    public ResponseInterface $response;
 
     public function __construct(ServerRequestInterface $request, ResponseInterface $response)
     {

@@ -9,7 +9,6 @@ use ReflectionFunctionAbstract;
 use ReflectionMethod;
 use Tavurn\Async\Context;
 use Tavurn\Contracts\Container\Container as ContainerContract;
-use Tavurn\Contracts\Container\Contextual;
 
 class Container implements ContainerContract
 {
@@ -189,13 +188,7 @@ class Container implements ContainerContract
 
     public function isContextual(string $abstract): bool
     {
-        if (! isset($this->contextual[$abstract])) {
-            $this->contextual[$abstract] = $contextual = in_array(Contextual::class, class_implements($abstract));
-
-            return $contextual;
-        }
-
-        return $this->contextual[$abstract];
+        return isset($this->contextual[$abstract]);
     }
 
     public function has(string $id): bool

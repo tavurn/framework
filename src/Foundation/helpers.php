@@ -6,10 +6,10 @@ if (! function_exists('app')) {
      * If an `$abstract` parameter is passed, you will be returned an instance
      * bound to that abstract.
      *
-     * @param class-string<T>|null $abstract
-     * @return \Tavurn\Foundation\Application|T
-     *
      * @template T
+     *
+     * @param class-string<T>|null $abstract
+     * @return \Tavurn\Foundation\Application | T
      */
     function app(string $abstract = null): mixed
     {
@@ -21,16 +21,37 @@ if (! function_exists('app')) {
     }
 }
 
+if (! function_exists('config')) {
+    /**
+     * Get a value from the config with the specified key.
+     *
+     * @template T
+     *
+     * @param string|array<int, string> $key
+     * @param T $default
+     * @return mixed | T
+     */
+    function config($key, $default = null): mixed
+    {
+        /**
+         * @var \Illuminate\Contracts\Config\Repository $repository
+         */
+        $repository = app(\Illuminate\Contracts\Config\Repository::class);
+
+        return $repository->get($key, $default);
+    }
+}
+
 if (! function_exists('async')) {
     /**
      * Wraps the given function block in a lazy future.
+     *
+     * @template T
      *
      * @param callable(): T $block
      * @return \Tavurn\Foundation\Async\Future<T>
      *
      * @see Future::$await
-     *
-     * @template T
      */
     function async(callable $block): Tavurn\Foundation\Async\Future
     {

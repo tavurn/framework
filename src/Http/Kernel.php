@@ -2,27 +2,30 @@
 
 namespace Tavurn\Http;
 
-use OpenSwoole\Core\Psr\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Tavurn\Contracts\Events\Dispatcher;
+use Tavurn\Contracts\Exceptions\Handler;
 use Tavurn\Contracts\Http\Kernel as KernelContract;
+use Tavurn\Contracts\Routing\Router;
 use Tavurn\Foundation\Application;
-use Tavurn\Support\Facades\Exception;
 use Throwable;
 
 class Kernel implements KernelContract
 {
     protected Application $app;
 
-    protected static array $bootstrappers = [
-        \Tavurn\Foundation\Bootstrap\LoadConfiguration::class,
-        \Tavurn\Foundation\Bootstrap\RegisterConfiguredProviders::class,
-    ];
+    protected Handler $handler;
+
+    protected Dispatcher $dispatcher;
 
     public function __construct(Application $app)
     {
         $this->app = $app;
+
+        $this->handler = $this->app->get(Handler::class);
+
+        $this->dispatcher = $this->app->get(Dispatcher::class);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -30,26 +33,26 @@ class Kernel implements KernelContract
         $this->app->contextual(ServerRequestInterface::class, $request);
 
         try {
-            $response = new Response('Hello');
+            $response = $this->sendRequestThroughRouter($request);
         } catch (Throwable $e) {
-            if (Exception::shouldReport($e)) {
+            if ($this->handler->shouldReport($e)) {
                 report($e);
             }
 
-            $response = Exception::render($request, $e);
+            $response = $this->handler->render($request, $e);
         }
 
-        $this->app->get(Dispatcher::class)->dispatch(
+        $this->dispatcher->dispatch(
             new RequestHandled($request, $response),
         );
 
         return $response;
     }
 
-    public function bootstrap(): void
+    protected function sendRequestThroughRouter(ServerRequestInterface $request): ResponseInterface
     {
-        if (! $this->app->hasBeenBootstrapped()) {
-            $this->app->bootstrapWith(static::$bootstrappers);
-        }
+        $router = $this->app->get(Router::class);
+
+        return $router->dispatch($request);
     }
 }
