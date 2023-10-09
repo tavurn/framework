@@ -29,6 +29,11 @@ class Application extends Container implements RequestHandlerInterface
      */
     protected array $providers = [];
 
+    protected static array $bootstrappers = [
+        \Tavurn\Foundation\Bootstrap\LoadConfiguration::class,
+        \Tavurn\Foundation\Bootstrap\RegisterConfiguredProviders::class,
+    ];
+
     public function __construct(Server $server, string $basePath = null)
     {
         if ($basePath) {
@@ -38,6 +43,8 @@ class Application extends Container implements RequestHandlerInterface
         $this->server = $server;
 
         $this->registerBaseBindings();
+
+        $this->registerCoreServices();
     }
 
     public static function getInstance(): self
@@ -102,6 +109,13 @@ class Application extends Container implements RequestHandlerInterface
         return $instance;
     }
 
+    public function registerCoreServices(): void
+    {
+        foreach (static::getCoreProviders() as $provider) {
+            $this->register($provider);
+        }
+    }
+
     public function registerBaseBindings(): void
     {
         static::$instance = $this;
@@ -138,7 +152,7 @@ class Application extends Container implements RequestHandlerInterface
     {
         $this->boot();
 
-        $this->get(Kernel::class)->bootstrap();
+        $this->bootstrapWith(static::$bootstrappers);
 
         $this->server->setHandler($this);
 
@@ -154,6 +168,10 @@ class Application extends Container implements RequestHandlerInterface
 
     public function bootstrapWith(array $bootstrappers): void
     {
+        if ($this->hasBeenBootstrapped()) {
+            return;
+        }
+
         $this->hasBeenBootstrapped = true;
 
         foreach ($bootstrappers as $bootstrapper) {
