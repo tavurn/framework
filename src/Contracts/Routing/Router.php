@@ -3,9 +3,9 @@
 namespace Tavurn\Contracts\Routing;
 
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Tavurn\Contracts\Http\Request;
 
 interface Router
 {
-    public function dispatch(ServerRequestInterface $request): ResponseInterface;
+    public function dispatch(Request $request): ResponseInterface;
 }

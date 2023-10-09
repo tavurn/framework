@@ -6,7 +6,7 @@ use FastRoute\RouteCollector;
 use Illuminate\Contracts\Config\Repository;
 use OpenSwoole\Core\Psr\Response;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Tavurn\Contracts\Http\Request;
 use Tavurn\Contracts\Http\Responsable;
 use Tavurn\Contracts\Routing\MutableDispatcher;
 use Tavurn\Contracts\Routing\Registrar;
@@ -35,7 +35,7 @@ class Router implements Registrar, RouterContract
         $this->dispatcher = new $dispatcher($this->collector->getData());
     }
 
-    public function dispatch(ServerRequestInterface $request): ResponseInterface
+    public function dispatch(Request $request): ResponseInterface
     {
         $resolved = $this->dispatcher->dispatch(
             $request->getMethod(),
@@ -51,12 +51,12 @@ class Router implements Registrar, RouterContract
 
     protected function callRouteHandler(
         callable $handler,
-        ServerRequestInterface $request,
+        Request $request,
         array $parameters = [],
     ): ResponseInterface {
         $request = $this->registerRequestAttributes($request, $parameters);
 
-        $this->app->contextual(ServerRequestInterface::class, $request);
+        $this->app->contextual(Request::class, $request);
 
         $response = $this->app->call($handler);
 
@@ -68,9 +68,9 @@ class Router implements Registrar, RouterContract
     }
 
     protected function registerRequestAttributes(
-        ServerRequestInterface $request,
+        Request $request,
         array $attributes,
-    ): ServerRequestInterface {
+    ): Request {
         foreach ($attributes as $name => $value) {
             $request = $request->withAttribute($name, $value);
         }
