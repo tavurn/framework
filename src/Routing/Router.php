@@ -121,6 +121,11 @@ class Router implements Registrar, RouterContract
         $this->addRoute(['OPTIONS'], $regex, $handler);
     }
 
+    public function any(string $regex, $handler): void
+    {
+        $this->addRoute(['GET', 'POST', 'PUT', 'PATCH', 'DELETE',' OPTIONS'], $regex, $handler);
+    }
+
     protected function reloadDispatcherData(): void
     {
         $this->dispatcher->updateData(

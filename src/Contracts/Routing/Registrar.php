@@ -34,4 +34,9 @@ interface Registrar
      * @param callable|string|string[] $handler
      */
     public function options(string $regex, $handler): void;
+
+    /**
+     * @param callable|string|string[] $handler
+     */
+    public function any(string $regex, $handler): void;
 }
