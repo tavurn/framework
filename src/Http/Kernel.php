@@ -33,7 +33,7 @@ class Kernel implements KernelContract
     {
         $request = $this->gatherRequest($request);
 
-        $this->app->contextual(ServerRequestInterface::class, $request);
+        $this->app->contextual(RequestContract::class, $request);
 
         try {
             $response = $this->sendRequestThroughRouter($request);
