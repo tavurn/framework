@@ -7,6 +7,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Tavurn\Support\Facade;
 
 /**
+ * @method static \void handle(\string $exception, \callable $handler)
  * @method static \void report(\Throwable $error)
  * @method static \bool shouldReport(\Throwable $error)
  * @method static ResponseInterface render(ServerRequestInterface $request, \Throwable $error)
