@@ -21,6 +21,16 @@ if (! function_exists('app')) {
     }
 }
 
+if (! function_exists('event')) {
+    /**
+     * Dispatch an event to the appropriate event listeners.
+     */
+    function event(object $event): void
+    {
+        app(\Tavurn\Contracts\Events\Dispatcher::class)->dispatch($event);
+    }
+}
+
 if (! function_exists('config')) {
     /**
      * Get a value from the config with the specified key.
