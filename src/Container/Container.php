@@ -120,7 +120,7 @@ class Container implements ContainerContract
     {
         $scope = $this->getDeclaringClass($function);
 
-        $name = $function->getName();
+        $name = $this->getReflectionFunctionIdentifier($function);
 
         $parameters = array_map(
             fn ($parameter) => [
@@ -145,7 +145,7 @@ class Container implements ContainerContract
 
         $scope = $this->getDeclaringClass($function);
 
-        $name = $function->getName();
+        $name = $this->getReflectionFunctionIdentifier($function);
 
         if (! $this->isResolved($scope, $name)) {
             $this->resolve($function);
@@ -186,6 +186,11 @@ class Container implements ContainerContract
         return is_null($scope)
             ? isset($this->resolved[$name])
             : isset($this->resolved[$scope][$name]);
+    }
+
+    protected function getReflectionFunctionIdentifier(ReflectionFunctionAbstract $function): string
+    {
+        return "{$function->getName()}::L{$function->getStartLine()}-L{$function->getEndLine()}";
     }
 
     public function isSingleton(string $abstract): bool
