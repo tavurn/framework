@@ -4,7 +4,6 @@ namespace Tavurn\Pipeline;
 
 use Closure;
 use Illuminate\Contracts\Pipeline\Pipeline as PipelineContract;
-use Tavurn\Foundation\Application;
 
 /**
  * @template Subject
@@ -12,11 +11,6 @@ use Tavurn\Foundation\Application;
  */
 class Pipeline implements PipelineContract
 {
-    /**
-     * The application instance.
-     */
-    protected Application $app;
-
     /**
      * The subject which will be passed to each pipe.
      *
@@ -27,7 +21,7 @@ class Pipeline implements PipelineContract
     /**
      * The pipes through which the subject is passed.
      *
-     * @var array<int, class-string>
+     * @var array<int, object>
      */
     protected array $pipes = [];
 
@@ -36,14 +30,9 @@ class Pipeline implements PipelineContract
      */
     protected string $using;
 
-    public function __construct(Application $app)
+    public static function new(): static
     {
-        $this->app = $app;
-    }
-
-    public static function new(Application $app): static
-    {
-        return new static($app);
+        return new static();
     }
 
     /**
@@ -52,7 +41,7 @@ class Pipeline implements PipelineContract
      * @param Subject $traveler
      * @return static
      */
-    public function send($traveler)
+    public function send($traveler): static
     {
         $this->subject = $traveler;
 
@@ -113,27 +102,22 @@ class Pipeline implements PipelineContract
     /**
      * Get the next item in the pipeline stack.
      */
-    protected function getNext(): Closure
+    protected function getNext(int $cur = 0): Closure
     {
-        $pipe = array_shift($this->pipes) ?? false;
+        $pipe = $this->pipes[$cur] ?? false;
 
-        return function ($subject) use ($pipe) {
+        return function ($subject) use ($pipe, $cur) {
             if (! $pipe) {
                 return $subject;
             }
 
-            if (is_string($pipe)) {
-                $pipe = $this->make($pipe)->{$this->using}(...);
-            }
+            $with = empty($this->pipes) ? [$subject] : [$subject, $this->getNext(++$cur)];
 
-            $with = empty($this->pipes) ? [$subject] : [$subject, $this->getNext()];
+            if (! is_callable($pipe)) {
+                return $pipe->{$this->using}(...$with);
+            }
 
             return $pipe(...$with);
         };
-    }
-
-    protected function make($pipe): mixed
-    {
-        return $this->app->build($pipe);
     }
 }

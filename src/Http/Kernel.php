@@ -22,6 +22,10 @@ class Kernel implements KernelContract
 
     protected Dispatcher $dispatcher;
 
+    protected Router $router;
+
+    protected Pipeline $pipeline;
+
     /**
      * @var array<int, class-string<Middleware>>
      */
@@ -34,6 +38,13 @@ class Kernel implements KernelContract
         $this->handler = $this->app->get(Handler::class);
 
         $this->dispatcher = $this->app->get(Dispatcher::class);
+
+        $this->router = $this->app->get(Router::class);
+
+        $this->middleware = $this->buildMiddleware();
+
+        $this->pipeline = Pipeline::new()
+            ->through($this->middleware);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -43,7 +54,9 @@ class Kernel implements KernelContract
         $this->app->contextual(RequestContract::class, $request);
 
         try {
-            $response = $this->sendRequestThroughRouter($request);
+            $response = $this->pipeline
+                ->send($request)
+                ->then($this->router->dispatch(...));
         } catch (Throwable $e) {
             if ($this->handler->shouldReport($e)) {
                 report($e);
@@ -59,15 +72,15 @@ class Kernel implements KernelContract
         return $response;
     }
 
-    protected function sendRequestThroughRouter(RequestContract $request): ResponseInterface
+    protected function buildMiddleware(): array
     {
-        $router = $this->app->get(Router::class);
+        $built = [];
 
-        return Pipeline::new($this->app)
-            ->send($request)
-            ->through($this->middleware)
-            ->via('process')
-            ->then($router->dispatch(...));
+        foreach ($this->middleware as $middleware) {
+            $built[] = $this->app->build($middleware)->process(...);
+        }
+
+        return $built;
     }
 
     protected function gatherRequest(ServerRequestInterface $request): RequestContract
