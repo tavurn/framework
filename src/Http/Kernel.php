@@ -11,7 +11,7 @@ use Tavurn\Contracts\Http\Middleware;
 use Tavurn\Contracts\Http\Request as RequestContract;
 use Tavurn\Contracts\Routing\Router;
 use Tavurn\Foundation\Application;
-use Tavurn\Pipeline\Pipeline;
+use Tavurn\Foundation\Middleware\Stack;
 use Throwable;
 
 class Kernel implements KernelContract
@@ -23,8 +23,6 @@ class Kernel implements KernelContract
     protected Dispatcher $dispatcher;
 
     protected Router $router;
-
-    protected Pipeline $pipeline;
 
     /**
      * @var array<int, class-string<Middleware>>
@@ -42,9 +40,6 @@ class Kernel implements KernelContract
         $this->router = $this->app->get(Router::class);
 
         $this->middleware = $this->buildMiddleware();
-
-        $this->pipeline = Pipeline::new()
-            ->through($this->middleware);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -54,9 +49,7 @@ class Kernel implements KernelContract
         $this->app->contextual(RequestContract::class, $request);
 
         try {
-            $response = $this->pipeline
-                ->send($request)
-                ->then($this->router->dispatch(...));
+            $response = $this->dispatchToRouter($request);
         } catch (Throwable $e) {
             if ($this->handler->shouldReport($e)) {
                 report($e);
@@ -72,12 +65,20 @@ class Kernel implements KernelContract
         return $response;
     }
 
+    protected function dispatchToRouter(RequestContract $request): ResponseInterface
+    {
+        $stack = (new Stack($this->middleware))
+            ->handler($this->router->dispatch(...));
+
+        return $stack->process($request);
+    }
+
     protected function buildMiddleware(): array
     {
         $built = [];
 
         foreach ($this->middleware as $middleware) {
-            $built[] = $this->app->build($middleware)->process(...);
+            $built[] = $this->app->build($middleware);
         }
 
         return $built;
