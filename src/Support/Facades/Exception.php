@@ -3,14 +3,14 @@
 namespace Tavurn\Support\Facades;
 
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Tavurn\Contracts\Http\Request;
 use Tavurn\Support\Facade;
 
 /**
  * @method static \void handle(\string $exception, \callable $handler)
  * @method static \void report(\Throwable $error)
  * @method static \bool shouldReport(\Throwable $error)
- * @method static ResponseInterface render(ServerRequestInterface $request, \Throwable $error)
+ * @method static ResponseInterface render(Request $request, \Throwable $error)
  */
 class Exception extends Facade
 {
