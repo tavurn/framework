@@ -7,9 +7,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Tavurn\Contracts\Events\Dispatcher;
 use Tavurn\Contracts\Exceptions\Handler;
 use Tavurn\Contracts\Http\Kernel as KernelContract;
+use Tavurn\Contracts\Http\Middleware;
 use Tavurn\Contracts\Http\Request as RequestContract;
 use Tavurn\Contracts\Routing\Router;
 use Tavurn\Foundation\Application;
+use Tavurn\Pipeline\Pipeline;
 use Throwable;
 
 class Kernel implements KernelContract
@@ -19,6 +21,11 @@ class Kernel implements KernelContract
     protected Handler $handler;
 
     protected Dispatcher $dispatcher;
+
+    /**
+     * @var array<int, class-string<Middleware>>
+     */
+    protected array $middleware = [];
 
     public function __construct(Application $app)
     {
@@ -52,6 +59,17 @@ class Kernel implements KernelContract
         return $response;
     }
 
+    protected function sendRequestThroughRouter(RequestContract $request): ResponseInterface
+    {
+        $router = $this->app->get(Router::class);
+
+        return Pipeline::new($this->app)
+            ->send($request)
+            ->through($this->middleware)
+            ->via('process')
+            ->then($router->dispatch(...));
+    }
+
     protected function gatherRequest(ServerRequestInterface $request): RequestContract
     {
         return new Request(
@@ -66,12 +84,5 @@ class Kernel implements KernelContract
             $request->getParsedBody(),
             $request->getProtocolVersion(),
         );
-    }
-
-    protected function sendRequestThroughRouter(ServerRequestInterface $request): ResponseInterface
-    {
-        $router = $this->app->get(Router::class);
-
-        return $router->dispatch($request);
     }
 }
