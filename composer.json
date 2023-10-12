@@ -1,5 +1,6 @@
 {
     "name": "tavurn/framework",
+    "description": "The Tavurn framework.",
     "type": "library",
     "license": "MIT",
     "autoload": {
@@ -20,8 +21,8 @@
     "require": {
         "php": "^8.2",
         "openswoole/core": "^22.1.4",
-        "psr/event-dispatcher": "1.0.0",
-        "psr/container": "2.0.2",
+        "psr/event-dispatcher": "^1.0.0",
+        "psr/container": "^2.0.2",
         "symfony/finder": "^6.3",
         "illuminate/config": "^v10.25.2",
         "illuminate/support": "^10.25",
