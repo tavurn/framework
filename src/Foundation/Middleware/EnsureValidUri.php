@@ -9,7 +9,7 @@ use Tavurn\Contracts\Http\Request;
 class EnsureValidUri implements Middleware
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function process(Request $request, Stack $next): ResponseInterface
     {

@@ -11,7 +11,6 @@ interface Request extends ServerRequestInterface
      *
      * @template Default
      *
-     * @param string $key
      * @param Default $default
      * @return string|Default
      */
@@ -22,7 +21,6 @@ interface Request extends ServerRequestInterface
      *
      * @template Default
      *
-     * @param string $key
      * @param Default $default
      * @return string|Default
      */
