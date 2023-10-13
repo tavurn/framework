@@ -80,6 +80,8 @@ class Router implements Registrar, RouterContract
 
     public function addRoute($methods, string $regex, $handler): void
     {
+        $regex = rtrim($regex, '/') . '/';
+
         if (is_string($handler)) {
             $handler = $this->app->build($handler);
         } elseif (is_array($handler)) {
