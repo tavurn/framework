@@ -100,8 +100,9 @@ if (! function_exists('go')) {
      * this function will be provided the passed in arguments.
      *
      * @param callable(mixed ...): void $block
-     * @param mixed ...$args
-     * @return int
      */
-    function go(callable $block, mixed ...$args): int { }
+    function go(callable $block, mixed ...$args): int
+    {
+        //
+    }
 }
