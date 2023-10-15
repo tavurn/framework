@@ -88,3 +88,20 @@ if (! function_exists('base_path')) {
         return app()->basePath($path);
     }
 }
+
+/**
+ * OpenSwoole already provides a `go` function.
+ * This function will basically never be created,
+ * but serves as a stub for better IDE support.
+ */
+if (! function_exists('go')) {
+    /**
+     * Start a new coroutine with the passed in function,
+     * this function will be provided the passed in arguments.
+     *
+     * @param callable(mixed ...): void $block
+     * @param mixed ...$args
+     * @return int
+     */
+    function go(callable $block, mixed ...$args): int { }
+}
