@@ -187,9 +187,9 @@ class Application extends Container implements RequestHandlerInterface
 
         Coroutine::run(function () {
             Coroutine::waitSingle(function () {
-                array_walk($this->providers, function (ServiceProvider $provider) {
-                    Coroutine::go($provider->booting(...));
-                });
+                array_walk($this->providers,
+                    fn (ServiceProvider $provider) => go($provider->booting(...)),
+                );
             });
 
             $this->isBooted = true;

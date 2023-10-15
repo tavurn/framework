@@ -32,7 +32,7 @@ final class Coroutine
         $results = [];
 
         foreach ($group as $identifier => $block) {
-            Coroutine::go(function () use ($waitGroup, $identifier, &$results, $block) {
+            go(function () use ($waitGroup, $identifier, &$results, $block) {
                 $waitGroup->add();
                 $results[$identifier] = $block();
                 $waitGroup->done();
@@ -65,7 +65,7 @@ final class Coroutine
     public static function each(array $items, callable $block): void
     {
         foreach ($items as $item) {
-            Coroutine::go($block, $item);
+            go($block, $item);
         }
     }
 
