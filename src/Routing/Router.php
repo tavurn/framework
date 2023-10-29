@@ -11,7 +11,7 @@ use Tavurn\Contracts\Http\Responsable;
 use Tavurn\Contracts\Routing\MutableDispatcher;
 use Tavurn\Contracts\Routing\Registrar;
 use Tavurn\Contracts\Routing\Router as RouterContract;
-use Tavurn\Foundation\Application;
+use Tavurn\Contracts\Foundation\Application;
 use Tavurn\Routing\Dispatcher\GroupCountBasedDispatcher;
 
 class Router implements Registrar, RouterContract
@@ -61,7 +61,7 @@ class Router implements Registrar, RouterContract
         $response = $this->app->call($handler);
 
         return match (true) {
-            $response instanceof Responsable => $response->respond(),
+            $response instanceof Responsable => $response->respond($request),
             is_string($response) => new Response($response),
             $response instanceof ResponseInterface => $response,
         };

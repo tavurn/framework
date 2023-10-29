@@ -5,7 +5,7 @@ namespace Tavurn\Foundation\Bootstrap;
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Config\Repository as RepositoryContract;
 use Symfony\Component\Finder\Finder;
-use Tavurn\Foundation\Application;
+use Tavurn\Contracts\Foundation\Application;
 
 class LoadConfiguration
 {

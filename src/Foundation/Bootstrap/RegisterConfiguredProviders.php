@@ -3,7 +3,7 @@
 namespace Tavurn\Foundation\Bootstrap;
 
 use Illuminate\Contracts\Config\Repository;
-use Tavurn\Foundation\Application;
+use Tavurn\Contracts\Foundation\Application;
 
 class RegisterConfiguredProviders
 {

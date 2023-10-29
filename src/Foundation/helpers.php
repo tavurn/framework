@@ -37,16 +37,20 @@ if (! function_exists('config')) {
      *
      * @template T
      *
-     * @param string|array<int, string> $key
+     * @param string|array<int, string>|null $key
      * @param T $default
-     * @return mixed | T
+     * @return mixed | T | \Illuminate\Contracts\Config\Repository
      */
-    function config($key, $default = null): mixed
+    function config($key = null, $default = null): mixed
     {
         /**
          * @var \Illuminate\Contracts\Config\Repository $repository
          */
         $repository = app(\Illuminate\Contracts\Config\Repository::class);
+
+        if (is_null($key)) {
+            return $repository;
+        }
 
         return $repository->get($key, $default);
     }
@@ -86,6 +90,16 @@ if (! function_exists('base_path')) {
     function base_path(string $path = ''): string
     {
         return app()->basePath($path);
+    }
+}
+
+if (! function_exists('database_path')) {
+    /**
+     * Get the project's database path.
+     */
+    function database_path(string $path = ''): string
+    {
+        return app()->basePath('database/' . $path);
     }
 }
 

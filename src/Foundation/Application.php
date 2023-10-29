@@ -5,14 +5,14 @@ namespace Tavurn\Foundation;
 use OpenSwoole\Server;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Tavurn\Async\Coroutine;
 use Tavurn\Container\Container;
 use Tavurn\Contracts\Container\Container as ContainerContract;
+use Tavurn\Contracts\Foundation\Application as ApplicationContract;
 use Tavurn\Contracts\Http\Kernel;
 use Tavurn\Support\ServiceProvider;
 
-class Application extends Container implements RequestHandlerInterface
+class Application extends Container implements ApplicationContract
 {
     protected static Application $instance;
 
@@ -66,6 +66,7 @@ class Application extends Container implements RequestHandlerInterface
     {
         return [
             \Tavurn\Foundation\Providers\ExceptionServiceProvider::class,
+            \Tavurn\Foundation\Providers\DatabaseServiceProvider::class,
         ];
     }
 
@@ -126,7 +127,7 @@ class Application extends Container implements RequestHandlerInterface
         );
 
         $this->instance(
-            Application::class,
+            ApplicationContract::class,
             $this,
         );
 
@@ -138,9 +139,7 @@ class Application extends Container implements RequestHandlerInterface
 
     public function instance(string $abstract, mixed $instance): void
     {
-        $this->singleton($abstract, function () use ($instance) {
-            return $instance;
-        });
+        $this->singleton($abstract, fn () => $instance);
     }
 
     public function getServer(): Server

@@ -6,11 +6,11 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Tavurn\Contracts\Events\Dispatcher;
 use Tavurn\Contracts\Exceptions\Handler;
+use Tavurn\Contracts\Foundation\Application;
 use Tavurn\Contracts\Http\Kernel as KernelContract;
 use Tavurn\Contracts\Http\Middleware;
 use Tavurn\Contracts\Http\Request as RequestContract;
 use Tavurn\Contracts\Routing\Router;
-use Tavurn\Foundation\Application;
 use Tavurn\Foundation\Middleware\Stack;
 use Throwable;
 
@@ -86,17 +86,6 @@ class Kernel implements KernelContract
 
     protected function gatherRequest(ServerRequestInterface $request): RequestContract
     {
-        return new Request(
-            $request->getUri(),
-            $request->getMethod(),
-            $request->getBody(),
-            $request->getHeaders(),
-            $request->getCookieParams(),
-            $request->getQueryParams(),
-            $request->getServerParams(),
-            $request->getUploadedFiles(),
-            $request->getParsedBody(),
-            $request->getProtocolVersion(),
-        );
+        return Request::gather($request);
     }
 }

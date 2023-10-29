@@ -6,7 +6,7 @@ use Tavurn\Contracts\Events\Dispatcher;
 use Tavurn\Support\Facade;
 
 /**
- * @method static \object dispatch(\object $event)
+ * @method static object dispatch(object $event)
  */
 class Event extends Facade
 {

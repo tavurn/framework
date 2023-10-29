@@ -2,7 +2,7 @@
 
 namespace Tavurn\Support;
 
-use Tavurn\Foundation\Application;
+use Tavurn\Contracts\Foundation\Application;
 
 abstract class ServiceProvider
 {
