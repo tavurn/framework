@@ -9,6 +9,15 @@ final class Context
         Coroutine::getContext($cid)[$key] = $value;
     }
 
+    public static function has(string $key, int $cid = 0): bool
+    {
+        if (! Coroutine::exists($cid)) {
+            return false;
+        }
+
+        return isset(Coroutine::getContext($cid)[$key]);
+    }
+
     /**
      * @template T
      *

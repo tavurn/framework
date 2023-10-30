@@ -205,7 +205,8 @@ class Container implements ContainerContract
 
     public function isContextual(string $abstract): bool
     {
-        return isset($this->contextual[$abstract]);
+        return $this->contextual[$abstract]
+            ?? $this->contextual[$abstract] = Context::has($abstract);
     }
 
     public function isAlias(string $alias): bool

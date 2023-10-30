@@ -16,6 +16,11 @@ final class Coroutine
         return \OpenSwoole\Coroutine::run($block);
     }
 
+    public static function exists(int $cid = 0): bool
+    {
+        return \OpenSwoole\Coroutine::exists($cid);
+    }
+
     /**
      * Waits for a group of blocks to be done executing and returns the results.
      *

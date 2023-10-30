@@ -5,11 +5,14 @@ namespace Tavurn\Foundation;
 use OpenSwoole\Server;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Tavurn\Async\Context;
 use Tavurn\Async\Coroutine;
+use Tavurn\Async\Coroutine as Co;
 use Tavurn\Container\Container;
 use Tavurn\Contracts\Container\Container as ContainerContract;
 use Tavurn\Contracts\Foundation\Application as ApplicationContract;
 use Tavurn\Contracts\Http\Kernel;
+use Tavurn\Support\Providers\Contextual;
 use Tavurn\Support\ServiceProvider;
 
 class Application extends Container implements ApplicationContract
@@ -184,8 +187,8 @@ class Application extends Container implements ApplicationContract
             return;
         }
 
-        Coroutine::run(function () {
-            Coroutine::waitSingle(function () {
+        Co::run(function () {
+            Co::waitSingle(function () {
                 array_walk($this->providers,
                     fn (ServiceProvider $provider) => go($provider->booting(...)),
                 );
@@ -195,8 +198,28 @@ class Application extends Container implements ApplicationContract
         });
     }
 
+    public function bootContextualProviders(): void
+    {
+        $providers = array_filter(
+            $this->providers,
+            fn ($provider) => $provider instanceof Contextual,
+        );
+
+        Co::each($providers, function (Contextual $provider) {
+            $provider->handling($this);
+
+            $parent = Coroutine::getPcid();
+
+            foreach ($provider->contextual() as $item) {
+                Context::set($item, Context::get($item), $parent);
+            }
+        });
+    }
+
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $this->bootContextualProviders();
+
         $kernel = $this->get(Kernel::class);
 
         return $kernel->handle($request);
