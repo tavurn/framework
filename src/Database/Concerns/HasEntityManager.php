@@ -16,7 +16,7 @@ trait HasEntityManager
     }
 
     /**
-     * @return Repository
+     * @return Repository<static>
      */
     public static function getRepository(): EntityRepository
     {

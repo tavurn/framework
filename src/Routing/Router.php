@@ -64,13 +64,12 @@ class Router implements Registrar, RouterContract
             $response instanceof Responsable => $response->respond($request),
             is_string($response) => new Response($response),
             $response instanceof ResponseInterface => $response,
+            default => new Response(''),
         };
     }
 
-    protected function registerRequestAttributes(
-        Request $request,
-        array $attributes,
-    ): Request {
+    protected function registerRequestAttributes(Request $request, array $attributes): Request
+    {
         foreach ($attributes as $name => $value) {
             $request = $request->withAttribute($name, $value);
         }

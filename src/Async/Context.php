@@ -26,8 +26,6 @@ final class Context
      */
     public static function get(string $key, int $cid = 0): mixed
     {
-        $cid = $cid === 0 ? Coroutine::getCid() : $cid;
-
         do {
             $context = Coroutine::getContext($cid);
 
