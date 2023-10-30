@@ -75,7 +75,7 @@ class Container implements ContainerContract
     {
         $constructor = (new ReflectionClass($class))->getConstructor();
 
-        if (! $constructor) {
+        if (is_null($constructor)) {
             return new $class;
         }
 
@@ -156,15 +156,13 @@ class Container implements ContainerContract
             : $this->resolved[$scope][$name];
 
         foreach ($parameters as $parameter) {
-            $abstract = $this->isAlias($abstract = $parameter['abstract'])
+            extract($parameter);
+
+            $abstract = $this->isAlias($abstract)
                 ? $this->aliases[$abstract]
                 : $abstract;
 
-            $name = $parameter['name'];
-
-            if (in_array($name, array_keys($merge))) {
-                $built = $merge[$name];
-            } elseif (is_null($abstract) || ! $this->has($abstract) && ! $this->isContextual($abstract)) {
+            if (is_null($abstract) || ! $this->has($abstract) && ! $this->isContextual($abstract)) {
                 $built = array_shift($merge);
             } else {
                 $built = $this->get($abstract);
