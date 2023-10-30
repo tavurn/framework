@@ -39,6 +39,11 @@ class Container implements ContainerContract
         $this->bind($abstract, $concrete, true);
     }
 
+    public function instance(string $abstract, mixed $instance): void
+    {
+        $this->singleton($abstract, fn () => $instance);
+    }
+
     public function contextual(string $abstract, mixed $instance): void
     {
         Context::set($abstract, $instance);
