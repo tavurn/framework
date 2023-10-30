@@ -32,7 +32,7 @@ class Application extends Container implements ApplicationContract
      */
     protected array $providers = [];
 
-    protected static array $bootstrappers = [
+    protected array $bootstrappers = [
         \Tavurn\Foundation\Bootstrap\LoadConfiguration::class,
         \Tavurn\Foundation\Bootstrap\RegisterConfiguredProviders::class,
     ];
@@ -154,7 +154,7 @@ class Application extends Container implements ApplicationContract
     {
         $this->boot();
 
-        $this->bootstrapWith(static::$bootstrappers);
+        $this->bootstrapWith($this->bootstrappers);
 
         $this->server->setHandler($this);
 
@@ -177,7 +177,7 @@ class Application extends Container implements ApplicationContract
         $this->hasBeenBootstrapped = true;
 
         foreach ($bootstrappers as $bootstrapper) {
-            $this->make($bootstrapper)->bootstrap(static::getInstance());
+            $this->make($bootstrapper)->bootstrap($this);
         }
     }
 
