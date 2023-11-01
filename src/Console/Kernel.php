@@ -6,9 +6,10 @@ use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface as Input;
 use Symfony\Component\Console\Output\OutputInterface as Output;
+use Tavurn\Contracts\Console\Kernel as KernelContract;
 use Tavurn\Contracts\Foundation\Application;
 
-class Kernel
+class Kernel implements KernelContract
 {
     protected Application $app;
 
