@@ -16,6 +16,13 @@ interface Container extends ContainerInterface
      */
     public function singleton(string $abstract, $concrete): void;
 
+    /**
+     * @param callable|class-string $concrete
+     */
+    public function singletonIfNotBound(string $abstract, $concrete): void;
+
+    public function instance(string $abstract, mixed $instance): void;
+
     public function contextual(string $abstract, mixed $instance): void;
 
     public function alias(string $abstract, string $alias): void;

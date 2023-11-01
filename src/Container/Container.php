@@ -39,6 +39,15 @@ class Container implements ContainerContract
         $this->bind($abstract, $concrete, true);
     }
 
+    public function singletonIfNotBound(string $abstract, $concrete): void
+    {
+        if ($this->has($abstract)) {
+            return;
+        }
+
+        $this->singleton($abstract, $concrete);
+    }
+
     public function instance(string $abstract, mixed $instance): void
     {
         $this->singleton($abstract, fn () => $instance);
