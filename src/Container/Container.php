@@ -168,6 +168,10 @@ class Container implements ContainerContract
                 : $abstract;
 
             if (is_null($abstract) || ! $this->has($abstract) && ! $this->isContextual($abstract)) {
+                if (empty($merge)) {
+                    continue;
+                }
+
                 $built = array_shift($merge);
             } else {
                 $built = $this->get($abstract);

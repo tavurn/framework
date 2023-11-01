@@ -6,9 +6,9 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
 use Illuminate\Contracts\Config\Repository;
+use Tavurn\Contracts\Foundation\Application;
 use Tavurn\Database\ConnectionManager;
 use Tavurn\Database\Repository as ModelRepository;
-use Tavurn\Contracts\Foundation\Application;
 use Tavurn\Support\ServiceProvider;
 
 class DatabaseServiceProvider extends ServiceProvider

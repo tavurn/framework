@@ -21,8 +21,6 @@ class Application extends Container implements ApplicationContract
 
     protected string $basePath;
 
-    protected Server $server;
-
     protected bool $isBooted = false;
 
     protected bool $hasBeenBootstrapped = false;
@@ -32,18 +30,16 @@ class Application extends Container implements ApplicationContract
      */
     protected array $providers = [];
 
-    protected array $bootstrappers = [
+    public static array $bootstrappers = [
         \Tavurn\Foundation\Bootstrap\LoadConfiguration::class,
         \Tavurn\Foundation\Bootstrap\RegisterConfiguredProviders::class,
     ];
 
-    public function __construct(Server $server, string $basePath = null)
+    public function __construct(string $basePath = null)
     {
         if ($basePath) {
             $this->basePath = $basePath;
         }
-
-        $this->server = $server;
 
         $this->registerBaseBindings();
 
@@ -133,34 +129,19 @@ class Application extends Container implements ApplicationContract
             ApplicationContract::class,
             $this,
         );
-
-        $this->instance(
-            Server::class,
-            $this->server,
-        );
     }
 
-    public function instance(string $abstract, mixed $instance): void
+    public function serve(Server $server): bool
     {
-        $this->singleton($abstract, fn () => $instance);
-    }
+        $this->instance(Server::class, $server);
 
-    public function getServer(): Server
-    {
-        return $this->server;
-    }
-
-    public function start(): never
-    {
         $this->boot();
 
-        $this->bootstrapWith($this->bootstrappers);
+        $this->bootstrapWith(static::$bootstrappers);
 
-        $this->server->setHandler($this);
+        $server->setHandler($this);
 
-        $this->server->start();
-
-        exit('The server has stopped' . PHP_EOL);
+        return $server->start();
     }
 
     public function hasBeenBootstrapped(): bool
@@ -168,7 +149,7 @@ class Application extends Container implements ApplicationContract
         return $this->hasBeenBootstrapped;
     }
 
-    public function bootstrapWith(array $bootstrappers): void
+    public function bootstrapWith(array $bootstrappers = []): void
     {
         if ($this->hasBeenBootstrapped()) {
             return;
@@ -223,5 +204,10 @@ class Application extends Container implements ApplicationContract
         $kernel = $this->get(Kernel::class);
 
         return $kernel->handle($request);
+    }
+
+    public function shutdown(): void
+    {
+        //
     }
 }

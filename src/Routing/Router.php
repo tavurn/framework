@@ -6,12 +6,12 @@ use FastRoute\RouteCollector;
 use Illuminate\Contracts\Config\Repository;
 use OpenSwoole\Core\Psr\Response;
 use Psr\Http\Message\ResponseInterface;
+use Tavurn\Contracts\Foundation\Application;
 use Tavurn\Contracts\Http\Request;
 use Tavurn\Contracts\Http\Responsable;
 use Tavurn\Contracts\Routing\MutableDispatcher;
 use Tavurn\Contracts\Routing\Registrar;
 use Tavurn\Contracts\Routing\Router as RouterContract;
-use Tavurn\Contracts\Foundation\Application;
 use Tavurn\Routing\Dispatcher\GroupCountBasedDispatcher;
 
 class Router implements Registrar, RouterContract

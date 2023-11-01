@@ -2,11 +2,11 @@
 
 namespace Tavurn\Contracts\Foundation;
 
+use OpenSwoole\Server;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tavurn\Contracts\Container\Container as ContainerContract;
-use OpenSwoole\Server;
 
-interface Application extends RequestHandlerInterface, ContainerContract
+interface Application extends ContainerContract, RequestHandlerInterface
 {
     public static function getInstance(): self;
 
@@ -14,9 +14,11 @@ interface Application extends RequestHandlerInterface, ContainerContract
 
     public function hasBeenBootstrapped(): bool;
 
+    public function bootstrapWith(array $bootstrappers): void;
+
     public function basePath(string $path = ''): string;
 
-    public function getServer(): Server;
+    public function serve(Server $server): bool;
 
-    public function start(): never;
+    public function shutdown(): void;
 }

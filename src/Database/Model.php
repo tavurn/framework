@@ -11,7 +11,7 @@ use Tavurn\Database\Concerns\HasEntityManager;
  */
 abstract class Model
 {
-    use HasEntityManager, Anemic, Creatable;
+    use Anemic, Creatable, HasEntityManager;
 
     public static function find(int $id, $lockMode = null, $lockVersion = null): ?static
     {
@@ -23,7 +23,7 @@ abstract class Model
     /**
      * @return QueryBuilder<static>
      */
-    public static function query(?string $alias = null): QueryBuilder
+    public static function query(string $alias = null): QueryBuilder
     {
         $alias ??= strtolower(
             class_basename(static::class),

@@ -4,8 +4,8 @@ namespace Tavurn\Support;
 
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\Str;
-use Tavurn\Contracts\Container\Container;
 use InvalidArgumentException;
+use Tavurn\Contracts\Container\Container;
 
 /**
  * This class is a "modified" version of the illuminate Manager.
@@ -16,14 +16,8 @@ use InvalidArgumentException;
  */
 abstract class Manager
 {
-    /**
-     * @var Container
-     */
     protected Container $container;
 
-    /**
-     * @var Repository
-     */
     protected Repository $config;
 
     protected array $customCreators = [];
@@ -37,12 +31,12 @@ abstract class Manager
         $this->config = $container->get(Repository::class);
     }
 
-    abstract function getDefaultDriver(): string;
+    abstract public function getDefaultDriver(): string;
 
     /**
      * @return T|mixed
      */
-    public function driver(?string $driver = null)
+    public function driver(string $driver = null)
     {
         $driver = $driver ?: $this->getDefaultDriver();
 
