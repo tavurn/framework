@@ -64,7 +64,6 @@ class Application extends Container implements ApplicationContract
     public static function getCoreProviders(): array
     {
         return [
-            \Tavurn\Foundation\Providers\ExceptionServiceProvider::class,
             \Tavurn\Foundation\Providers\DatabaseServiceProvider::class,
         ];
     }
