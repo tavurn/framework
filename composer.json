@@ -32,10 +32,6 @@
         "symfony/cache": "^v6.3",
         "symfony/console": "^v6.3"
     },
-    "provide": {
-        "psr/container": "2.0.2",
-        "psr/event-dispatcher": "1.0.0"
-    },
     "require-dev": {
         "openswoole/ide-helper": "^22.0.1",
         "laravel/pint": "^1.13"
