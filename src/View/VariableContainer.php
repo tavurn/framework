@@ -30,7 +30,7 @@ class VariableContainer
     /**
      * @param string|int $key
      */
-    public function e($key, $default = null): mixed
+    protected function e($key, $default = null): mixed
     {
         return $this->variables[$key] ?? $default;
     }
