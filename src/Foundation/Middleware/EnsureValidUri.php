@@ -15,7 +15,7 @@ class EnsureValidUri implements Middleware
     {
         $uri = $request->getUri();
 
-        $path = rtrim($uri->getPath(), '/') . '/';
+        $path = rtrim($uri->getPath(), '/') ?: '/';
 
         $request = $request->withUri(
             $uri->withPath($path),
