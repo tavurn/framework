@@ -19,6 +19,4 @@ interface Application extends ContainerContract, RequestHandlerInterface
     public function basePath(string $path = ''): string;
 
     public function serve(Server $server): bool;
-
-    public function shutdown(): void;
 }

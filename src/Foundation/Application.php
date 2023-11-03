@@ -204,9 +204,4 @@ class Application extends Container implements ApplicationContract
 
         return $kernel->handle($request);
     }
-
-    public function shutdown(): void
-    {
-        //
-    }
 }
