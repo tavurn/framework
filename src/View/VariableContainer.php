@@ -19,6 +19,7 @@ class VariableContainer
 
     /**
      * @template T
+     *
      * @param \Closure(): T $block
      * @return T
      */

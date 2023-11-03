@@ -146,7 +146,6 @@ if (! function_exists('template')) {
  * These functions will basically never be created
  * but serve as stubs for better IDE support.
  */
-
 if (! function_exists('go')) {
     /**
      * Start a new coroutine with the passed in function,
