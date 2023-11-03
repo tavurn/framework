@@ -103,6 +103,42 @@ if (! function_exists('database_path')) {
     }
 }
 
+if (! function_exists('ob_capture')) {
+    /**
+     * Capture the output buffer produced by the given closure.
+     *
+     * @param callable(): void $block
+     */
+    function ob_capture(callable $block, array $arguments = []): string
+    {
+        if (ob_get_length()) {
+            ob_clean();
+        }
+
+        ob_start();
+
+        $block(...$arguments);
+
+        return ob_get_clean() ?: '';
+    }
+}
+
+if (! function_exists('template')) {
+    /**
+     * Render a template with the given variables.
+     */
+    function template(string $name, array $variables = []): string
+    {
+        $container = new \Tavurn\View\VariableContainer($variables);
+
+        $path = base_path("views/{$name}");
+
+        return ob_capture(static function ($container, $path) {
+            $container->run(fn () => include $path);
+        }, [$container, $path]);
+    }
+}
+
 /* ### START OPENSWOOLE IDE HELPERS ### */
 
 /**
