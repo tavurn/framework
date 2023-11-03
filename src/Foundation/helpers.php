@@ -103,11 +103,14 @@ if (! function_exists('database_path')) {
     }
 }
 
+/* ### START OPENSWOOLE IDE HELPERS ### */
+
 /**
- * OpenSwoole already provides a `go` function.
- * This function will basically never be created,
- * but serves as a stub for better IDE support.
+ * OpenSwoole already provides these functions.
+ * These functions will basically never be created
+ * but serve as stubs for better IDE support.
  */
+
 if (! function_exists('go')) {
     /**
      * Start a new coroutine with the passed in function,
@@ -120,3 +123,18 @@ if (! function_exists('go')) {
         //
     }
 }
+
+if (! function_exists('defer')) {
+    /**
+     * Waits for the current coroutine to finish and
+     * executes the given block.
+     *
+     * @param callable(): void $block
+     */
+    function defer(callable $block): void
+    {
+        //
+    }
+}
+
+/* ### END OPENSWOOLE IDE HELPERS ### */
