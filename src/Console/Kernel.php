@@ -44,6 +44,11 @@ class Kernel implements KernelContract
         return $this->symfony->run($input, $output);
     }
 
+    public function addCommands(array $commands): void
+    {
+        $this->symfony->addCommands($commands);
+    }
+
     protected function commands(): void
     {
         //
@@ -100,6 +105,10 @@ class Kernel implements KernelContract
             );
 
             $this->app->bootstrapWith($bootstrappers);
+        }
+
+        if (! $this->app->isBooted()) {
+            $this->app->boot();
         }
     }
 }

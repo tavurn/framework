@@ -12,6 +12,8 @@ interface Application extends ContainerContract, RequestHandlerInterface
 
     public function isBooted(): bool;
 
+    public function boot(): void;
+
     public function hasBeenBootstrapped(): bool;
 
     public function bootstrapWith(array $bootstrappers): void;
