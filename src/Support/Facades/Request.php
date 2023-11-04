@@ -8,6 +8,6 @@ class Request extends Facade
 {
     protected static function getContainerAccessor(): string
     {
-        return \Tavurn\Contracts\Http\Request::class;
+        return \Psr\Http\Message\ServerRequestInterface::class;
     }
 }

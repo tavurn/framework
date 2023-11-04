@@ -65,6 +65,7 @@ class Application extends Container implements ApplicationContract
     {
         return [
             \Tavurn\Foundation\Providers\DatabaseServiceProvider::class,
+            \Tavurn\Foundation\Providers\Psr17ServiceProvider::class,
         ];
     }
 

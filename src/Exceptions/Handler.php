@@ -4,9 +4,9 @@ namespace Tavurn\Exceptions;
 
 use OpenSwoole\Core\Psr\Response;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Tavurn\Contracts\Container\Container;
 use Tavurn\Contracts\Exceptions\Handler as HandlerContract;
-use Tavurn\Contracts\Http\Request;
 use Throwable;
 
 class Handler implements HandlerContract
@@ -52,7 +52,7 @@ class Handler implements HandlerContract
         return (bool) $error->report();
     }
 
-    public function render(Request $request, Throwable $error): ResponseInterface
+    public function render(ServerRequestInterface $request, Throwable $error): ResponseInterface
     {
         if (! method_exists($error, 'render')) {
             return new Response("500 | {$error->getMessage()}", 500, 'Internal Server Error');

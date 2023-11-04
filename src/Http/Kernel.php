@@ -2,6 +2,7 @@
 
 namespace Tavurn\Http;
 
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Tavurn\Contracts\Events\Dispatcher;
@@ -9,7 +10,6 @@ use Tavurn\Contracts\Exceptions\Handler;
 use Tavurn\Contracts\Foundation\Application;
 use Tavurn\Contracts\Http\Kernel as KernelContract;
 use Tavurn\Contracts\Http\Middleware;
-use Tavurn\Contracts\Http\Request as RequestContract;
 use Tavurn\Contracts\Routing\Router;
 use Tavurn\Foundation\Middleware\Stack;
 use Throwable;
@@ -29,6 +29,8 @@ class Kernel implements KernelContract
      */
     protected array $middleware = [];
 
+    protected ServerRequestCreatorInterface $serverRequestCreator;
+
     public function __construct(Application $app)
     {
         $this->app = $app;
@@ -40,13 +42,17 @@ class Kernel implements KernelContract
         $this->router = $this->app->get(Router::class);
 
         $this->middleware = $this->buildMiddleware();
+
+        $this->serverRequestCreator = $this->app->get(
+            ServerRequestCreatorInterface::class,
+        );
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $request = $this->gatherRequest($request);
-
-        $this->app->contextual(RequestContract::class, $request);
+        $this->app->contextual(ServerRequestInterface::class,
+            $request = $this->gatherRequest($request),
+        );
 
         try {
             $response = $this->dispatchToRouter($request);
@@ -65,7 +71,7 @@ class Kernel implements KernelContract
         return $response;
     }
 
-    protected function dispatchToRouter(RequestContract $request): ResponseInterface
+    protected function dispatchToRouter(ServerRequestInterface $request): ResponseInterface
     {
         $stack = (new Stack($this->middleware))
             ->handler($this->router->dispatch(...));
@@ -84,8 +90,22 @@ class Kernel implements KernelContract
         return $built;
     }
 
-    protected function gatherRequest(ServerRequestInterface $request): RequestContract
+    protected function gatherRequest(ServerRequestInterface $request): ServerRequestInterface
     {
-        return Request::gather($request);
+        foreach ($request->getServerParams() as $k => $v) {
+            $server[strtoupper($k)] = $v;
+        }
+
+        parse_str($request->getBody()->getContents(), $post);
+
+        return $this->serverRequestCreator->fromArrays(
+            $server ?? [],
+            $request->getHeaders(),
+            $request->getCookieParams(),
+            $request->getQueryParams(),
+            $post,
+            $request->getUploadedFiles(),
+            $request->getBody(),
+        );
     }
 }

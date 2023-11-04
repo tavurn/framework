@@ -3,8 +3,9 @@
 namespace Tavurn\Contracts\Http;
 
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 interface Responsable
 {
-    public function respond(Request $request): ResponseInterface;
+    public function respond(ServerRequestInterface $request): ResponseInterface;
 }

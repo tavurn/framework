@@ -3,15 +3,15 @@
 namespace Tavurn\Http;
 
 use Psr\Http\Message\ResponseInterface;
-use Tavurn\Contracts\Http\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
 readonly class RequestHandled
 {
-    public Request $request;
+    public ServerRequestInterface $request;
 
     public ResponseInterface $response;
 
-    public function __construct(Request $request, ResponseInterface $response)
+    public function __construct(ServerRequestInterface $request, ResponseInterface $response)
     {
         $this->request = $request;
 

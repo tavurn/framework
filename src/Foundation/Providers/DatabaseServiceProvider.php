@@ -5,6 +5,7 @@ namespace Tavurn\Foundation\Providers;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
+use Doctrine\ORM\Tools\Console\Command;
 use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
 use Illuminate\Contracts\Config\Repository;
 use Tavurn\Contracts\Console\Kernel;
@@ -12,7 +13,6 @@ use Tavurn\Contracts\Foundation\Application;
 use Tavurn\Database\ConnectionManager;
 use Tavurn\Database\Repository as ModelRepository;
 use Tavurn\Support\ServiceProvider;
-use Doctrine\ORM\Tools\Console\Command;
 
 class DatabaseServiceProvider extends ServiceProvider
 {

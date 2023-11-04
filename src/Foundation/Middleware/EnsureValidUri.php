@@ -3,15 +3,15 @@
 namespace Tavurn\Foundation\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Tavurn\Contracts\Http\Middleware;
-use Tavurn\Contracts\Http\Request;
 
 class EnsureValidUri implements Middleware
 {
     /**
      * {@inheritdoc}
      */
-    public function process(Request $request, Stack $next): ResponseInterface
+    public function process(ServerRequestInterface $request, Stack $next): ResponseInterface
     {
         $uri = $request->getUri();
 

@@ -30,7 +30,9 @@
         "doctrine/dbal": "^3.7",
         "symfony/finder": "^6.3",
         "symfony/cache": "^v6.3",
-        "symfony/console": "^v6.3"
+        "symfony/console": "^v6.3",
+        "nyholm/psr7": "^1.8",
+        "nyholm/psr7-server": "^1.0"
     },
     "require-dev": {
         "openswoole/ide-helper": "^22.0.1",

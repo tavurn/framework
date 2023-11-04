@@ -4,8 +4,8 @@ namespace Tavurn\Foundation\Middleware;
 
 use Closure;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Tavurn\Contracts\Http\Middleware;
-use Tavurn\Contracts\Http\Request;
 
 final class Stack
 {
@@ -27,7 +27,7 @@ final class Stack
     /**
      * The callback that will be run at the end of the stack.
      *
-     * @param Closure(Request): ResponseInterface $destination
+     * @param Closure(ServerRequestInterface): ResponseInterface $destination
      */
     public function handler(Closure $destination): Stack
     {
@@ -39,7 +39,7 @@ final class Stack
     /**
      * Execute the next "step" (middleware) in the stack.
      */
-    public function process(Request $request): ResponseInterface
+    public function process(ServerRequestInterface $request): ResponseInterface
     {
         return $this->next($request);
     }
@@ -48,12 +48,12 @@ final class Stack
      * Execute the next "step" (middleware) in the stack.
      * This method is an alias of Stack::process()
      */
-    public function __invoke(Request $request): ResponseInterface
+    public function __invoke(ServerRequestInterface $request): ResponseInterface
     {
         return $this->next($request);
     }
 
-    protected function next(Request $request): ResponseInterface
+    protected function next(ServerRequestInterface $request): ResponseInterface
     {
         $middleware = array_shift($this->middleware) ?? false;
 
