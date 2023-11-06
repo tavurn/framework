@@ -4,8 +4,6 @@ namespace Tavurn\Foundation;
 
 use OpenSwoole\Core\Psr\Stream;
 use OpenSwoole\Core\Psr\UploadedFile;
-use OpenSwoole\Http\Request;
-use OpenSwoole\Http\Response;
 use OpenSwoole\Server;
 use Psr\Http\Message\ResponseInterface;
 use Tavurn\Async\Context;
@@ -144,7 +142,7 @@ class Application extends Container implements ApplicationContract
 
         $this->bootstrapWith(static::$bootstrappers);
 
-        $server->on('request', function (Request $request, Response $pending) {
+        $server->on('request', function (\OpenSwoole\Http\Request $request, \OpenSwoole\Http\Response $pending) {
             $response = $this->handle(
                 $this->gatherRequest($request)
             );
@@ -226,7 +224,7 @@ class Application extends Container implements ApplicationContract
         return $kernel->handle($request);
     }
 
-    private function gatherRequest(Request $request): RequestContract
+    private function gatherRequest(\OpenSwoole\Http\Request $request): RequestContract
     {
         foreach ($request->files ??= [] as $name => $fileData) {
             $request->files[$name] = new UploadedFile(
