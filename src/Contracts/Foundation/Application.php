@@ -3,10 +3,11 @@
 namespace Tavurn\Contracts\Foundation;
 
 use OpenSwoole\Server;
-use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Message\ResponseInterface;
 use Tavurn\Contracts\Container\Container as ContainerContract;
+use Tavurn\Contracts\Http\Request;
 
-interface Application extends ContainerContract, RequestHandlerInterface
+interface Application extends ContainerContract
 {
     public static function getInstance(): self;
 
@@ -21,4 +22,6 @@ interface Application extends ContainerContract, RequestHandlerInterface
     public function basePath(string $path = ''): string;
 
     public function serve(Server $server): bool;
+
+    public function handle(Request $request): ResponseInterface;
 }

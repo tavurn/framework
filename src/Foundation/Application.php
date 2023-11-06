@@ -2,9 +2,12 @@
 
 namespace Tavurn\Foundation;
 
+use OpenSwoole\Core\Psr\Stream;
+use OpenSwoole\Core\Psr\UploadedFile;
+use OpenSwoole\Http\Request;
+use OpenSwoole\Http\Response;
 use OpenSwoole\Server;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Tavurn\Async\Context;
 use Tavurn\Async\Coroutine;
 use Tavurn\Async\Coroutine as Co;
@@ -12,12 +15,15 @@ use Tavurn\Container\Container;
 use Tavurn\Contracts\Container\Container as ContainerContract;
 use Tavurn\Contracts\Foundation\Application as ApplicationContract;
 use Tavurn\Contracts\Http\Kernel;
+use Tavurn\Contracts\Http\Request as RequestContract;
 use Tavurn\Support\Providers\Contextual;
 use Tavurn\Support\ServiceProvider;
 
 class Application extends Container implements ApplicationContract
 {
     protected static Application $instance;
+
+    protected Kernel $kernel;
 
     protected string $basePath;
 
@@ -65,7 +71,6 @@ class Application extends Container implements ApplicationContract
     {
         return [
             \Tavurn\Foundation\Providers\DatabaseServiceProvider::class,
-            \Tavurn\Foundation\Providers\Psr17ServiceProvider::class,
         ];
     }
 
@@ -139,7 +144,17 @@ class Application extends Container implements ApplicationContract
 
         $this->bootstrapWith(static::$bootstrappers);
 
-        $server->setHandler($this);
+        $server->on('request', function (Request $request, Response $pending) {
+            $response = $this->handle(
+                $this->gatherRequest($request)
+            );
+
+            $pending->header = $response->getHeaders();
+
+            $pending->status($response->getStatusCode(), $response->getReasonPhrase());
+
+            $pending->end($response->getBody()->getContents());
+        });
 
         return $server->start();
     }
@@ -197,12 +212,43 @@ class Application extends Container implements ApplicationContract
         });
     }
 
-    public function handle(ServerRequestInterface $request): ResponseInterface
+    public function setKernel(Kernel $kernel): void
+    {
+        $this->kernel = $kernel;
+    }
+
+    public function handle(RequestContract $request): ResponseInterface
     {
         $this->bootContextualProviders();
 
-        $kernel = $this->get(Kernel::class);
+        $kernel = $this->kernel ??= $this->get(Kernel::class);
 
         return $kernel->handle($request);
+    }
+
+    private function gatherRequest(Request $request): RequestContract
+    {
+        foreach ($request->files ??= [] as $name => $fileData) {
+            $request->files[$name] = new UploadedFile(
+                Stream::createStreamFromFile($fileData['tmp_name']),
+                $fileData['size'],
+                $fileData['error'],
+                $fileData['name'],
+                $fileData['type'],
+            );
+        }
+
+        return (new \Tavurn\Http\Request(
+            $request->server['request_method'],
+            $request->server['request_uri'],
+            $request->header,
+            $request->rawContent() ?: '',
+            $request->server['server_protocol'],
+            $request->server,
+        ))
+            ->withUploadedFiles($request->files)
+            ->withCookieParams($request->cookie ?? [])
+            ->withQueryParams($request->get ?? [])
+            ->withParsedBody($request->post ?? []);
     }
 }

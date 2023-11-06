@@ -3,24 +3,21 @@
 namespace Tavurn\Foundation\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Tavurn\Contracts\Http\Middleware;
+use Tavurn\Contracts\Http\Request;
 
 class EnsureValidUri implements Middleware
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function process(ServerRequestInterface $request, Stack $next): ResponseInterface
+    public function process(Request $request, Stack $next): ResponseInterface
     {
         $uri = $request->getUri();
 
         $path = rtrim($uri->getPath(), '/') ?: '/';
 
-        $request = $request->withUri(
+        $request->withUri(
             $uri->withPath($path),
         );
 
-        return $next->process($request);
+        return $next($request);
     }
 }

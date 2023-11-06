@@ -3,7 +3,7 @@
 namespace Tavurn\Contracts\Exceptions;
 
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Tavurn\Contracts\Http\Request;
 use Throwable;
 
 interface Handler
@@ -12,5 +12,5 @@ interface Handler
 
     public function shouldReport(Throwable $error): bool;
 
-    public function render(ServerRequestInterface $request, Throwable $error): ResponseInterface;
+    public function render(Request $request, Throwable $error): ResponseInterface;
 }
