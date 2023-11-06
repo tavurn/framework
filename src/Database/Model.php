@@ -2,13 +2,11 @@
 
 namespace Tavurn\Database;
 
+use Doctrine\ORM\Mapping\Id;
 use Tavurn\Database\Concerns\Anemic;
 use Tavurn\Database\Concerns\Creatable;
 use Tavurn\Database\Concerns\HasEntityManager;
 
-/**
- * @mixin QueryBuilder<static>
- */
 abstract class Model
 {
     use Anemic, Creatable, HasEntityManager;
@@ -20,14 +18,21 @@ abstract class Model
         );
     }
 
+    public function delete(bool $flush = true): void
+    {
+        ($manager = static::getManager())->remove($this);
+
+        if ($flush) {
+            $manager->flush($this);
+        }
+    }
+
     /**
      * @return QueryBuilder<static>
      */
     public static function query(string $alias = null): QueryBuilder
     {
-        $alias ??= strtolower(
-            class_basename(static::class),
-        );
+        $alias ??= static::defaultAlias();
 
         return static::getRepository()
             ->createQueryBuilder($alias);
@@ -39,6 +44,11 @@ abstract class Model
     public static function all(): array
     {
         return static::getRepository()->findAll();
+    }
+
+    public static function defaultAlias(): string
+    {
+        return strtolower(class_basename(static::class));
     }
 
     /**
